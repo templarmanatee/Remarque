@@ -2,29 +2,6 @@ const dayjs = require("dayjs");
 const { PlannerItem, GridItem, Layout } = require("../models");
 
 module.exports = {
-  getPreviousMonday: (dateString) => {
-    let today = new Date(dateString);
-    let currentDayOfWeek = today.getDay();
-    let oneDayInMilliseconds = 24 * 60 * 60 * 1000 - 4000;
-    let millisecondsSinceLastMonday =
-      (currentDayOfWeek - 1) * oneDayInMilliseconds;
-    if (currentDayOfWeek === 1) {
-      return today;
-    } else {
-      let lastMonday = new Date(today.getTime() - millisecondsSinceLastMonday);
-      return lastMonday;
-    }
-  },
-  getNextSunday: (dateString) => {
-    const dayObj = dayjs.day(0);
-    const dayOfWeek = dayObj.getDay();
-    const daysUntilNextSunday = 7 - dayOfWeek;
-    const nextSunday = new Date(
-      dayObj.getTime() + daysUntilNextSunday * 24 * 60 * 60 * 1000 - 4000
-    );
-    console.log(nextSunday);
-    return nextSunday;
-  },
   sevenDay: (monday) => {
     const daysOfWeek = [];
     for (let i = 0; i < 7; i++) {

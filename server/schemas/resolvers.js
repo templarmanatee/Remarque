@@ -5,8 +5,6 @@ const weekday = require("dayjs/plugin/weekday");
 const { User, Spread, GridItem, PlannerItem } = require("../models");
 const { signToken } = require("../utils/auth");
 const {
-  getPreviousMonday,
-  getNextSunday,
   sevenDay,
   createPlanner,
   createGridTemplate,
@@ -45,7 +43,7 @@ const resolvers = {
     spread: async (parent, { date }, context) => {
       if (context.user) {
         const day = new Date(date);
-        const monday = getPreviousMonday(day).toISOString().substring(0, 10);
+        const monday = dayjs().day(1).toISOString();
         const spread = await Spread.findOne()
           .where("monday")
           .equals(monday)

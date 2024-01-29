@@ -8,21 +8,11 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_GRIDITEM } from "../../utils/mutations";
 
 const Card = ({ cardItems }) => {
-  console.log(cardItems);
-
-  // let foundCard;
-
-  // for (let g = 1; g < cardItems.length; g++) {
-  //   if (i === cardItems[g].i) {
-  //     return cardItems[g];
-  //   }
-  //   console.log(cardItems[g]);
-  //   foundCard = cardItems[g];
-  // }
-
-  // console.log(foundCard);
-
   const [updateGridItem] = useMutation(UPDATE_GRIDITEM);
+
+  const [titleState, setTitleState] = useState("");
+
+  const [bodyState, setBodyState] = useState("");
 
   const handleSubmit = async () => {
     console.log(bodyState);
@@ -39,10 +29,6 @@ const Card = ({ cardItems }) => {
       console.log(error);
     }
   };
-
-  const [titleState, setTitleState] = useState("");
-
-  const [bodyState, setBodyState] = useState("");
 
   const handleTitleChange = (e) => {
     const { value } = e.target;
@@ -73,7 +59,7 @@ const Card = ({ cardItems }) => {
   }
 
   return (
-    <div className="card card-compact w-full bg-base-100 shadow-xl">
+    <div className="card card-compact card-bordered w-full bg-base-100 shadow-xl">
       <Dragger />
       <textarea
         type="text"
@@ -84,8 +70,8 @@ const Card = ({ cardItems }) => {
       />
       <div>
         <TextareaAutosize
-          minRows="16"
-          maxRows="16"
+          minRows="9"
+          maxRows="9"
           defaultValue={`${checkBody(cardItems.body)}`}
           placeholder="Type here"
           className="flex textarea h-full w-full resize-none p-4 text-xl handwriting-font"

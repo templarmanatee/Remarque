@@ -46,9 +46,9 @@ const Layout = ({ spread }) => {
       x: 3,
       y: 0,
       w: 1,
-      h: 3,
-      minH: 3,
-      maxH: 3,
+      h: 2,
+      minH: 2,
+      maxH: 2,
       card: <Card cardItems={spread.gridItems[0]} />,
     },
     {
@@ -56,12 +56,12 @@ const Layout = ({ spread }) => {
       x: 4,
       y: 0,
       w: 1,
-      h: 3,
-      minH: 3,
-      maxH: 3,
+      h: 2,
+      minH: 2,
+      maxH: 2,
       card: <Card cardItems={spread.gridItems[1]} />,
     },
-    { i: "3", x: 2, y: 0, w: 3, h: 3, card: <Todo /> },
+    { i: "3", x: 2, y: 0, w: 1, h: 2, card: <Todo /> },
     {
       i: "4",
       x: 2,
@@ -82,7 +82,7 @@ const Layout = ({ spread }) => {
       cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
       rowHeight={189}
       width={1000}
-      margin={[0, 0]}
+      margin={[10, 10]}
       resizeHandles={["se"]}
       draggableHandle={".dragHandle"}
       // onLayoutChange={saveLayout()}
@@ -90,7 +90,8 @@ const Layout = ({ spread }) => {
       {items.map((item) => {
         return (
           <div
-            className="border-4 border-base-300"
+            //border-4 border-base-300
+            className=""
             key={item.i}
             data-grid={{ x: item.x, y: item.y }}
           >
