@@ -5,16 +5,11 @@ const Todo = () => {
   return (
     <div>
       <div className="overflow-x-auto overflow-y-auto max-w-full max-h-full">
-        <table className="table w-full">
+        <table className="table">
           {/* head */}
-
           <thead>
             <tr>
-              <th>
-                <Dragger />
-              </th>
               <th>Task</th>
-              <th>Importance</th>
               <th>Complete</th>
             </tr>
           </thead>
@@ -23,36 +18,7 @@ const Todo = () => {
             <tr>
               <th>1</th>
               <td>
-                <textarea className="textarea textarea-ghost text-xl handwriting-font"></textarea>
-              </td>
-              <td>
-                <div className="rating">
-                  <input
-                    type="radio"
-                    name="rating-1"
-                    className="mask mask-star-2 bg-green-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-1"
-                    className="mask mask-star-2 bg-lime-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-1"
-                    className="mask mask-star-2 bg-yellow-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-1"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-1"
-                    className="mask mask-star-2 bg-red-400"
-                  />
-                </div>
+                <input className="textarea textarea-ghost text-s handwriting-font"></input>
               </td>
               <td>
                 <input type="checkbox" className="checkbox" />
@@ -62,36 +28,7 @@ const Todo = () => {
             <tr>
               <th>2</th>
               <td>
-                <textarea className="textarea textarea-ghost text-xl handwriting-font"></textarea>
-              </td>
-              <td>
-                <div className="rating">
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-green-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-lime-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-yellow-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-2"
-                    className="mask mask-star-2 bg-red-400"
-                  />
-                </div>
+                <input className="textarea input-ghost text-m handwriting-font p-x-0"></input>
               </td>
               <td>
                 <input type="checkbox" className="checkbox" />
@@ -101,36 +38,17 @@ const Todo = () => {
             <tr>
               <th>3</th>
               <td>
-                <textarea className="textarea textarea-ghost text-xl handwriting-font"></textarea>
+                <input className="textarea textarea-ghost text-m handwriting-font"></input>
               </td>
               <td>
-                <div className="rating">
-                  <input
-                    type="radio"
-                    name="rating-3"
-                    className="mask mask-star-2 bg-green-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-3"
-                    className="mask mask-star-2 bg-lime-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-3"
-                    className="mask mask-star-2 bg-yellow-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-3"
-                    className="mask mask-star-2 bg-orange-400"
-                  />
-                  <input
-                    type="radio"
-                    name="rating-3"
-                    className="mask mask-star-2 bg-red-400"
-                  />
-                </div>
+                <input type="checkbox" className="checkbox" />
+              </td>
+            </tr>
+            {/* row 4 */}
+            <tr>
+              <th>4</th>
+              <td>
+                <input className="textarea textarea-ghost text-m handwriting-font"></input>
               </td>
               <td>
                 <input type="checkbox" className="checkbox" />
