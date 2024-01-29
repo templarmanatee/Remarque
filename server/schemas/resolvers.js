@@ -1,4 +1,7 @@
 const { AuthenticationError } = require("apollo-server-express");
+const dayjs = require("dayjs");
+const weekday = require("dayjs/plugin/weekday");
+
 const { User, Spread, GridItem, PlannerItem } = require("../models");
 const { signToken } = require("../utils/auth");
 const {
@@ -83,11 +86,8 @@ const resolvers = {
       const user = await User.create(args);
       const token = signToken(user);
 
-      const date = new Date();
-      const dateString = date.toISOString().substring(0, 10);
-
-      let monday = getPreviousMonday(dateString);
-      let sunday = getNextSunday(dateString);
+      let monday = dayjs().day(1);
+      let sunday = dayjs().date(6);
       const week = sevenDay(monday);
       const plannerItems = await createPlanner(week);
       const { gridItems, layoutItems } = await createGridTemplate();
@@ -108,7 +108,7 @@ const resolvers = {
 
       await User.findByIdAndUpdate(user._id, {
         $push: { spreads: spread },
-      }).populate("spreads")
+      }).populate("spreads");
 
       return { token, user, firstSpread };
     },
@@ -119,8 +119,9 @@ const resolvers = {
     // -Location of the grid items on the page
     addSpread: async (parent, { date }, context) => {
       if (context.user) {
-        let monday = getPreviousMonday(date);
-        let sunday = getNextSunday(date);
+        const refDate = dayjs(date);
+        let monday = refDate.day(1);
+        let sunday = refDate.day(7);
         const week = sevenDay(monday);
         const plannerItems = await createPlanner(week);
         const { gridItems, layoutItems } = await createGridTemplate();

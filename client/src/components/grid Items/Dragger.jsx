@@ -1,18 +1,24 @@
 import React from "react";
 
 const styles = {
-    dragger: {
-      borderWidth: 10,
-      borderRadius: 4,
-      position: "absolute",
-    },
-  };
+  dragger: {
+    borderWidth: 10,
+    borderRadius: 4,
+    position: "absolute",
+  },
+};
 
 const Dragger = () => {
-    return(
-            <button className = "dragHandle border-amber-600 focus:border-amber-300" 
-            onFocus={ () => this.onFocus() }style={styles.dragger}></button>
-    );
+  const dragFocus = () => {
+    // Figure out what was meant to go here
+  };
+  return (
+    <button
+      className="dragHandle border-amber-600 focus:border-amber-300"
+      onFocus={dragFocus}
+      style={styles.dragger}
+    ></button>
+  );
 };
 
 export default Dragger;
