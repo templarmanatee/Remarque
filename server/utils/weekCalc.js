@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const { PlannerItem, GridItem, Layout } = require("../models");
 
 module.exports = {
@@ -15,29 +16,31 @@ module.exports = {
     }
   },
   getNextSunday: (dateString) => {
-    const dayObj = new Date(dateString);
+    const dayObj = dayjs.day(0);
     const dayOfWeek = dayObj.getDay();
     const daysUntilNextSunday = 7 - dayOfWeek;
     const nextSunday = new Date(
       dayObj.getTime() + daysUntilNextSunday * 24 * 60 * 60 * 1000 - 4000
     );
+    console.log(nextSunday);
     return nextSunday;
   },
-  sevenDay: (mon) => {
+  sevenDay: (monday) => {
     const daysOfWeek = [];
     for (let i = 0; i < 7; i++) {
-      const date = new Date(mon);
-      date.setDate(mon.getDate() + i);
-      const dayOfMonth = date.getDate();
-      daysOfWeek.push(dayOfMonth);
+      const weekday = monday.date(i);
+      daysOfWeek.push(dayjs(weekday));
     }
     return daysOfWeek;
   },
   createPlanner: async (week) => {
     let plannerItems = [];
-
-    for (day in week) {
-      const plannerItem = await PlannerItem.create({ dayOfCurrentWeek: day });
+    console.log(week);
+    for (let i = 0; i < 7; i++) {
+      const weekday = week[i].day();
+      const plannerItem = await PlannerItem.create({
+        dayOfCurrentWeek: weekday,
+      });
       plannerItems.push(plannerItem);
     }
 
@@ -65,8 +68,8 @@ module.exports = {
     let gridItems = [];
     let layoutItems = [];
 
-    for (let i = 0; i < template.length; i++) {
-      const layout = template[i];
+    for (const element of template) {
+      const layout = element;
       const gridObj = await GridItem.create({
         title: "Note",
         body: "",
