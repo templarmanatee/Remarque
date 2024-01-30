@@ -5,12 +5,12 @@ const Todo = () => {
   return (
     <div>
       <div className="overflow-x-auto overflow-y-auto max-w-full max-h-full">
-        <table className="table">
+        <table className="table max-w-full">
           {/* head */}
-          <thead>
+          <thead className="max-w-full">
             <tr>
               <th>Task</th>
-              <th>Complete</th>
+              <th className="justify-end">Complete</th>
             </tr>
           </thead>
           <tbody>

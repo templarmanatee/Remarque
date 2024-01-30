@@ -1,8 +1,10 @@
-const checkTodaysDate = (date) => {
-  const today = new Date().toISOString.substring(0, 10);
-  const input = new Date(date).toISOString.substring(0, 10);
+const dayjs = require("dayjs");
 
-  return today === input;
+const checkTodaysDate = (date) => {
+  const today = dayjs();
+  const input = dayjs(date);
+
+  return today.isSame(input);
 };
 
 const getTodaysDate = () => {
@@ -10,15 +12,8 @@ const getTodaysDate = () => {
 };
 
 const getPreviousMonday = (dateString) => {
-  const day = new Date(dateString);
-  const dayOfWeek = day.getDay();
-  const daysSinceMonday = (dayOfWeek + 6) % 7;
-  const mondayDate = new Date(
-    day.getFullYear(),
-    day.getMonth(),
-    day.getDate() - daysSinceMonday
-  );
-  return mondayDate;
+  const day = dayjs(dateString);
+  return day(-6);
 };
 
 module.exports = {

@@ -26,9 +26,8 @@ const getPreviousMonday = (dateString) => {
 const Navbar = ({ allSpreads, currentSpread }) => {
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
-  const [header, setHeader] = useState(
-    `${currentSpread.monday} - ${currentSpread.sunday}`
-  );
+  const [headerLeft, setHeaderLeft] = useState(`${currentSpread.monday}`);
+  const [headerRight, setHeaderRight] = useState(`${currentSpread.sunday}`);
 
   const mondaysDate = getNextMonday(currentSpread.monday);
   const lastMondaysDate = getPreviousMonday(currentSpread.monday);
@@ -81,11 +80,6 @@ const Navbar = ({ allSpreads, currentSpread }) => {
         <button className="btn btn-ghost normal-case hidden lg:flex text-4xl cursive-font">
           Remarque
         </button>
-        <img
-          src={Logo}
-          alt="remarque logo"
-          className="w-10 h-11 mb-5 mt-3 place-self-center"
-        ></img>
       </div>
       <div className="navbar-center lg:flex">
         <ul className="menu menu-horizontal">
@@ -95,8 +89,6 @@ const Navbar = ({ allSpreads, currentSpread }) => {
               e.preventDefault();
               let foundMonday;
               allSpreads.forEach(async (spread) => {
-                console.log("To check: " + spread.monday);
-                console.log("Check against: " + lastMondaysDate);
                 if (spread.monday === lastMondaysDate) {
                   foundMonday = spread;
                 }
@@ -131,8 +123,16 @@ const Navbar = ({ allSpreads, currentSpread }) => {
             </svg>
           </button>
           <li tabIndex={0}>
-            <button className="btn btn-accent mx-3">
-              <h2 className="font-bold">{header}</h2>
+            <button className="btn btn-accent mx-3 w-max-full">
+              <h2 className="font-bold">
+                {headerLeft}
+                {/* <img
+                  src={Logo}
+                  alt="remarque logo"
+                  className="w-6 h-6 mb-5 mt-3 place-self-center"
+                ></img> */}
+                {headerRight}
+              </h2>
             </button>
           </li>
           <button
@@ -141,8 +141,6 @@ const Navbar = ({ allSpreads, currentSpread }) => {
               e.preventDefault();
               let foundMonday;
               allSpreads.forEach(async (spread) => {
-                console.log("To check: " + spread.monday);
-                console.log("Check against: " + mondaysDate);
                 if (spread.monday === mondaysDate) {
                   foundMonday = spread;
                 }
@@ -180,7 +178,7 @@ const Navbar = ({ allSpreads, currentSpread }) => {
       </div>
       <div className="navbar-end">
         <a
-          className="btn btn-ghost flex-initial max-w-28 ml-5"
+          className="btn btn-ghost flex-initial max-w-24"
           href="/login"
           onClick={() => Auth.logout()}
         >
