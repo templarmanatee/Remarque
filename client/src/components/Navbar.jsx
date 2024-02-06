@@ -3,6 +3,7 @@ import Auth from "../utils/auth";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../utils/mutations";
 import { useNavigate } from "react-router-dom";
+import NavDropdown from "./NavDropdown";
 import Logo from "../RemarqueSmallLogo.svg";
 
 const getNextMonday = (dateString) => {
@@ -42,41 +43,7 @@ const Navbar = ({ allSpreads, currentSpread }) => {
   return (
     <div className="navbar bg-gradient-to-r from-primary to-secondary">
       <div className="navbar-start">
-        <div className="dropdown">
-          <label tabIndex={0} className="btn btn-ghost btn-circle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16M4 18h7"
-              />
-            </svg>
-          </label>
-          <ul
-            tabIndex={0}
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>Table of Contents</li>
-
-            {allSpreads.map((spread) => {
-              return (
-                <li key={spread._id}>
-                  <button onClick={routeChange} key={spread._id}>
-                    <a href={spread._id}>{spread.monday}</a>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
+        <NavDropdown></NavDropdown>
         <button className="btn btn-ghost normal-case hidden lg:flex text-4xl cursive-font">
           Remarque
         </button>
@@ -125,13 +92,12 @@ const Navbar = ({ allSpreads, currentSpread }) => {
           <li tabIndex={0}>
             <button className="btn btn-accent mx-3 w-max-full">
               <h2 className="font-bold">
-                {headerLeft}
+                {headerLeft} - {headerRight}
                 {/* <img
                   src={Logo}
                   alt="remarque logo"
                   className="w-6 h-6 mb-5 mt-3 place-self-center"
                 ></img> */}
-                {headerRight}
               </h2>
             </button>
           </li>
