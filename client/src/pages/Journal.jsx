@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
-import { GridLayout, Navbar } from "../components/index";
+import { GridLayout } from "../components/index";
+import { Navbar } from "../components/nav/index";
 import InfoModal from "../components/info";
 import Auth from "../utils/auth";
 import { ADD_SPREAD } from "../utils/mutations";
 import { QUERY_SPREAD, QUERY_USER } from "../utils/queries";
 import { useParams } from "react-router-dom";
-
 const Journal = () => {
   const checkLoggedIn = () => {
     if (!Auth.loggedIn()) {

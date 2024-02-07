@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
-import Auth from "../utils/auth";
+import Auth from "../../utils/auth";
 import { useMutation } from "@apollo/client";
-import { ADD_SPREAD } from "../utils/mutations";
+import { ADD_SPREAD } from "../../utils/mutations";
 import { useNavigate } from "react-router-dom";
 import NavDropdown from "./NavDropdown";
-import Logo from "../RemarqueSmallLogo.svg";
-
-const getNextMonday = (dateString) => {
-  let inputDate = new Date(dateString);
-  let sevenDaysLater = new Date(inputDate.getTime() + 7 * 24 * 60 * 60 * 1000);
-  return sevenDaysLater.toISOString().slice(0, 10);
-};
+import Logo from "../../RemarqueSmallLogo.svg";
+import dayjs from "dayjs";
 
 const getPreviousMonday = (dateString) => {
-  const day = new Date(dateString);
-  const dayOfWeek = day.getDay();
-  const daysSinceMonday = (dayOfWeek + 6) % 7;
-  const mondaysDate = new Date(
-    day.getFullYear(),
-    day.getMonth(),
-    day.getDate() - daysSinceMonday
-  );
-  return mondaysDate.toISOString().slice(0, 10);
+  const day = dayjs(dateString);
+  return day.day(-6);
+};
+
+const getNextMonday = (dateString) => {
+  const day = dayjs(dateString);
+  return day.day(8);
 };
 
 const Navbar = ({ allSpreads, currentSpread }) => {
@@ -31,6 +24,7 @@ const Navbar = ({ allSpreads, currentSpread }) => {
   const [headerRight, setHeaderRight] = useState(`${currentSpread.sunday}`);
 
   const mondaysDate = getNextMonday(currentSpread.monday);
+  console.log(mondaysDate);
   const lastMondaysDate = getPreviousMonday(currentSpread.monday);
 
   const routeChange = (e) => {

@@ -1,23 +1,44 @@
-const dayjs = require("dayjs");
+import dayjs from "dayjs";
 
-const checkTodaysDate = (date) => {
-  const today = dayjs();
-  const input = dayjs(date);
+// Source: https://www.youtube.com/watch?v=s9-K02CP8hw
+export const getDates = (month = dayjs().month(), year = dayjs().year()) => {
+  const firstDayOfMonth = dayjs().year(year).month(month).startOf("month");
+  const lastDayOfMonth = dayjs().year(year).month(month).endOf("month");
 
-  return today.isSame(input);
-};
+  const calendarArray = [];
+  // Constitutes a 6 week calendar with room on either side for spillover
+  const daysOnCalendar = 42;
 
-const getTodaysDate = () => {
-  return new Date().toISOString.substring(0, 10);
-};
+  // First week of calendar, AKA "prefix dates"
+  for (let i = 0; i < firstDayOfMonth.day(); i++) {
+    const date = firstDayOfMonth.day(i);
 
-const getPreviousMonday = (dateString) => {
-  const day = dayjs(dateString);
-  return day(-6);
-};
+    calendarArray.push({
+      currentMonth: false,
+      date,
+    });
+  }
 
-module.exports = {
-  checkTodaysDate,
-  getTodaysDate,
-  getPreviousMonday,
+  // Actual calendar month depicted
+  for (let i = firstDayOfMonth.date(); i <= lastDayOfMonth.date(); i++) {
+    calendarArray.push({
+      currentMonth: true,
+      date: firstDayOfMonth.date(i),
+      today:
+        firstDayOfMonth.date(i).toDate().toDateString() ===
+        dayjs().toDate().toDateString(),
+    });
+  }
+
+  const daysRemaining = daysOnCalendar - calendarArray.length;
+  // Last week of calendar, AKA "suffix dates"
+  for (
+    let i = lastDayOfMonth.date() + 1;
+    i <= lastDayOfMonth.date() + daysRemaining;
+    i++
+  ) {
+    calendarArray.push({ currentMonth: false, date: lastDayOfMonth.date(i) });
+  }
+
+  return calendarArray;
 };

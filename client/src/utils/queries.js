@@ -77,6 +77,7 @@ export const USER_SPREADS = gql`
   query UserSpreads {
     userSpreads {
       _id
+      monday
     }
   }
 `;

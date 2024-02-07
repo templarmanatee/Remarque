@@ -1,6 +1,6 @@
 import GridLayout from "./GridLayout";
-import Navbar from "./Navbar";
-import NavDropdown from "./NavDropdown";
 import SplashScreen from "./SplashScreen";
 import InfoModal from "./info";
-export { Navbar, NavDropdown, GridLayout, SplashScreen, InfoModal };
+import NavDropdown from "./nav/NavDropdown";
+import Navbar from "./nav/Navbar";
+export { GridLayout, SplashScreen, InfoModal, Navbar, NavDropdown };
