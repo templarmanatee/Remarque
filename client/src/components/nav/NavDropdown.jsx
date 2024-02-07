@@ -29,7 +29,7 @@ const NavDropdown = ({ allSpreads, currentSpread }) => {
         </svg>
       </label>
       <ul className="dropdown-content mt-3 p-2 shadow-xl bg-base-100 rounded-box w-96 h-84">
-        <div className="flex justify-center">
+        <div className="flex justify-start">
           <button
             className="btn btn-ghost"
             onClick={async (e) => {
@@ -85,17 +85,43 @@ const NavDropdown = ({ allSpreads, currentSpread }) => {
           {getDates(selectDate.month(), selectDate.year()).map(
             ({ date, currentMonth, today }, index) => {
               const day = date.day();
-              if ((day === 0) || (day === 6)) {
-                console.log(date);
+              if (day === 0 || day === 6) {
                 return (
-                  <div key={index} className="py-2">
-                    <h1 className="bg-gray-300 rounded-full">{date.date()}</h1>
-                  </div>
+                  <button
+                    key={index}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      console.log(`To check: %s`, date.day(1));
+                      console.log("Check against: Found Date");
+                      //   if (spread.monday === lastMondaysDate) {
+                      //     foundMonday = spread;
+                      //   }
+                      // });
+                      // if (foundMonday === undefined) {
+                      //   foundMonday = await addSpread({
+                      //     variables: {
+                      //       date: lastMondaysDate,
+                      //     },
+                      //   }).then((data) => {
+                      //     setNewSpread(data);
+                      //     const newSpreadId = newSpread;
+                      //     setNewSpread(null);
+                      //     setTimeout(window.location.replace(`/${newSpreadId}`), 500);
+                      //   });
+                      // }
+                      // window.location.replace(`/${foundMonday._id}`);
+                    }}
+                  >
+                    <div className="py-2">
+                      <h1 className="bg-gray-300 rounded-full">
+                        {date.date()}
+                      </h1>
+                    </div>
+                  </button>
                 );
               } else {
                 return (
                   <div key={index} className="py-2">
-                    
                     <h1 className="bg-gray-100">{date.date()}</h1>
                   </div>
                 );
