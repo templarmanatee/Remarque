@@ -45,8 +45,6 @@ const Journal = () => {
         <div className="sticky bottom-0 left-70 h-20 w-20">
           <InfoModal />
         </div>
-
-        <button></button>
       </div>
     );
   }

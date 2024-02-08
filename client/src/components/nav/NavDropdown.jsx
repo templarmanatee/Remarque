@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMutation } from "@apollo/client";
+import { ADD_SPREAD } from "../../utils/mutations";
 import Logo from "../../RemarqueSmallLogo.svg";
 import { getDates } from "../../utils/helpers";
 import dayjs from "dayjs";
@@ -7,8 +9,37 @@ import dayjs from "dayjs";
 const NavDropdown = ({ allSpreads, currentSpread }) => {
   const days = ["Su", "M", "T", "W", "Th", "F", "S"];
   const currentDate = dayjs();
+  const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [today, setToday] = useState(currentDate);
   const [selectDate, setSelectDate] = useState(currentDate);
+  const [newSpread, setNewSpread] = useState("");
+
+  const routeChange = async (e) => {
+    // e.preventDefault();
+    // console.log(e);
+    // const enteredWeek = date.day();
+    // const daysSinceMonday = (enteredWeek + 7 - 1) % 7;
+    // let recentMonday = enteredWeek
+    //   .subtract(daysSinceMonday, "day")
+    //   .format("YYYY-MM-DD");
+    // allSpreads.forEach((spread) => {
+    //   if (spread.monday === recentMonday) {
+    //     recentMonday = spread;
+    //   }
+    // });
+    // if (recentMonday === undefined) {
+    //   recentMonday = await addSpread({
+    //     variables: {
+    //       date: recentMonday,
+    //     },
+    //   }).then((data) => {
+    //     setNewSpread(data);
+    //     const newSpreadId = newSpread;
+    //     setNewSpread(null);
+    //     setTimeout(window.location.replace(`/${newSpreadId}`), 500);
+    //   });
+    // }
+  };
 
   return (
     <div className="dropdown">
@@ -30,6 +61,7 @@ const NavDropdown = ({ allSpreads, currentSpread }) => {
       </label>
       <ul className="dropdown-content mt-3 p-2 shadow-xl bg-base-100 rounded-box w-96 h-84">
         <div className="flex justify-start">
+          {/* Left button to control month select */}
           <button
             className="btn btn-ghost"
             onClick={async (e) => {
@@ -53,6 +85,7 @@ const NavDropdown = ({ allSpreads, currentSpread }) => {
             </svg>
           </button>
           <div className="mt-3">{selectDate.format("MMMM, YYYY")}</div>
+          {/* Right button to control month select */}
           <button
             className="btn btn-ghost"
             onClick={async (e) => {
@@ -76,6 +109,7 @@ const NavDropdown = ({ allSpreads, currentSpread }) => {
             </svg>
           </button>
         </div>
+        {/* Autogenerating calendar nav */}
         <div className="w-full grid grid-cols-7">
           {days.map((day, index) => {
             return <h1 key={index}>{day}</h1>;
@@ -87,31 +121,7 @@ const NavDropdown = ({ allSpreads, currentSpread }) => {
               const day = date.day();
               if (day === 0 || day === 6) {
                 return (
-                  <button
-                    key={index}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      console.log(`To check: %s`, date.day(1));
-                      console.log("Check against: Found Date");
-                      //   if (spread.monday === lastMondaysDate) {
-                      //     foundMonday = spread;
-                      //   }
-                      // });
-                      // if (foundMonday === undefined) {
-                      //   foundMonday = await addSpread({
-                      //     variables: {
-                      //       date: lastMondaysDate,
-                      //     },
-                      //   }).then((data) => {
-                      //     setNewSpread(data);
-                      //     const newSpreadId = newSpread;
-                      //     setNewSpread(null);
-                      //     setTimeout(window.location.replace(`/${newSpreadId}`), 500);
-                      //   });
-                      // }
-                      // window.location.replace(`/${foundMonday._id}`);
-                    }}
-                  >
+                  <button key={index} date={date}>
                     <div className="py-2">
                       <h1 className="bg-gray-300 rounded-full">
                         {date.date()}

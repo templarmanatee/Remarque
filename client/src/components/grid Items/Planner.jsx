@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Weekday from "../Weekday";
+import Weekday from "./planner_items/Weekday";
 
 const Planner = ({ plannerItems }) => {
   const plannerArray = plannerItems;
