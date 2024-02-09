@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { Planner, Card, Todo } from "./grid Items/index.js";
+import { Planner, Card, Todo } from "./grid_items/index.js";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
 import { QUERY_SPREAD } from "../utils/queries.js";
