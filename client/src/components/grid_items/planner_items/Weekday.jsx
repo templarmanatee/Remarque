@@ -3,7 +3,7 @@ import TextareaAutosize from "react-textarea-autosize";
 import { useMutation } from "@apollo/client";
 import { FaRegSave } from "react-icons/fa";
 import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
-import EntryModal from "./EntryModal";
+import EntryModal from "./NewEntryModal";
 import FilledEntry from "./FilledEntry";
 const Weekday = ({ id, body, weekday }) => {
   const [updatePlannerItem] = useMutation(UPDATE_PLANNERITEM);
@@ -31,8 +31,10 @@ const Weekday = ({ id, body, weekday }) => {
       <div className="divider">
         <span className="label-text">{`${getDayOfWeek(weekday)}`}</span>
       </div>
-      <EntryModal></EntryModal>
-      <FilledEntry></FilledEntry>
+      <div id="weekday-content" className="flex space-x-2">
+        <FilledEntry></FilledEntry>
+        <EntryModal></EntryModal>
+      </div>
     </div>
   );
 };

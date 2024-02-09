@@ -8,7 +8,7 @@ const Todo = () => {
         <table className="table max-w-full">
           {/* head */}
           <thead className="max-w-full">
-            <tr>
+            <tr className="w-1/5">
               <th>Task</th>
               <th className="justify-end">Complete</th>
             </tr>

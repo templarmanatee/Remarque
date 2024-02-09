@@ -61,7 +61,7 @@ const Layout = ({ spread }) => {
       maxH: 2,
       card: <Card cardItems={spread.gridItems[1]} />,
     },
-    { i: "3", x: 2, y: 0, w: 1, h: 2, card: <Todo /> },
+    { i: "3", x: 2, y: 0, w: 2, h: 2, card: <Todo /> },
     {
       i: "4",
       x: 2,
