@@ -34,11 +34,7 @@ const NewEntryModal = () => {
           ></input>
           <div className="text-primary"></div>
           <div className="modal-action">
-            <label
-              htmlFor="planner_entry"
-              className="btn btn-sm btn-primary"
-              onClick=""
-            >
+            <label htmlFor="planner_entry" className="btn btn-sm btn-primary">
               Edit Entry
             </label>
           </div>

@@ -7,7 +7,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import "./beep.css";
+import "./styles/beep.css";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";

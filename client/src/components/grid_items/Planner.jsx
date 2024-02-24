@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import TimeDrop from "./planner_items/TimeDrop";
 import Weekday from "./planner_items/Weekday";
 
 const Planner = ({ plannerItems }) => {
