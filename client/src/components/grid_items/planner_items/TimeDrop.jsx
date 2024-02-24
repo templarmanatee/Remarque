@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import TimePicker from "react-timepicker-c";
 
-const TimeDrop = () => {
+const TimeDrop = ({ onChange }) => {
   const [timeValue, setTimeValue] = useState("");
 
   const handleTimeChange = (timeValue) => {
     setTimeValue(timeValue);
+    onChange(timeValue);
   };
 
   return (
