@@ -49,7 +49,6 @@ const resolvers = {
           .equals(monday)
           .where("userId")
           .equals(context.user._id);
-
         return spread;
       }
     },
