@@ -4,14 +4,13 @@ import Dragger from "./Dragger";
 const Todo = () => {
   const [todos, setTodos] = useState([]);
 
-  const addTodo = todo => {
-    setTodos([...todos]); 
+  const addTodo = (todo) => {
+    setTodos([...todos]);
+  };
 
-  }
-  
   return (
-    <div className="overflow-x-auto overflow-y-auto max-w-full max-h-full">
-      <table className="table max-w-full">
+    <div className="card card-compact card-bordered overflow-x-auto overflow-y-auto w-full h-full bg-base-100 shadow-xl rounded-xl">
+      <table className="table">
         {/* head */}
         <thead className="">
           <tr className="">
@@ -29,41 +28,17 @@ const Todo = () => {
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y">
+        <tbody className="">
           {/* row 1 */}
           {/* For each entry in the weekday planner, make table row autofilled with data. */}
-          <tr className="">
+          <tr className="h-24">
             <td>
-              <input type="checkbox" className="checkbox" />
+              <input type="checkbox" className="checkbox justify-start" />
             </td>
             <td>
-              <input className="textarea input-ghost text-m handwriting-font p-x-0"></input>
-            </td>
-          </tr>
-          {/* <tr>
-            <td>
-              <input type="checkbox" className="checkbox" />
-            </td>
-            <td>
-              <input className="textarea input-ghost text-m handwriting-font p-x-0"></input>
+              <input className="textarea textarea-ghost input text-m handwriting-font border-ghost"></input>
             </td>
           </tr>
-          <tr>
-            <td>
-              <input type="checkbox" className="checkbox" />
-            </td>
-            <td>
-              <input className="textarea input-ghost text-m handwriting-font p-x-0"></input>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <input type="checkbox" className="checkbox" />
-            </td>
-            <td>
-              <input className="textarea input-ghost text-m handwriting-font p-x-0"></input>
-            </td>
-          </tr> */}
         </tbody>
       </table>
     </div>

@@ -3,7 +3,7 @@ import Auth from "../../utils/auth";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../../utils/mutations";
 import { useNavigate } from "react-router-dom";
-import NavDropdown from "./NavDropdown";
+import NavCalendar from "./NavCalendar";
 import Logo from "../../RemarqueSmallLogo.svg";
 import dayjs from "dayjs";
 
@@ -34,92 +34,87 @@ const Navbar = ({ allSpreads, currentSpread }) => {
     window.location.replace(`/${newSpreadId}`);
   };
 
+  const handleLeftButton = async (e) => {
+    e.preventDefault();
+    let foundMonday;
+    allSpreads.forEach(async (spread) => {
+      if (spread.monday === lastMondaysDate) {
+        foundMonday = spread;
+      }
+    });
+    if (foundMonday === undefined) {
+      foundMonday = await addSpread({
+        variables: {
+          date: lastMondaysDate,
+        },
+      }).then((data) => {
+        setNewSpread(data);
+        const newSpreadId = newSpread;
+        setNewSpread(null);
+        setTimeout(window.location.replace(`/${newSpreadId}`), 500);
+      });
+    }
+    window.location.replace(`/${foundMonday._id}`);
+  };
+
+  const handleRightButton = async (e) => {
+    e.preventDefault();
+    let foundMonday;
+    allSpreads.forEach(async (spread) => {
+      if (spread.monday === mondaysDate) {
+        foundMonday = spread;
+      }
+    });
+    if (foundMonday === undefined) {
+      foundMonday = await addSpread({
+        variables: {
+          date: mondaysDate,
+        },
+      }).then((data) => {
+        setNewSpread(data);
+        const newSpreadId = newSpread;
+        setNewSpread(null);
+        setTimeout(window.location.replace(`/${newSpreadId}`), 500);
+      });
+    }
+    window.location.replace(`/${foundMonday._id}`);
+  };
+
   return (
-    <div className="navbar bg-gradient-to-r from-primary to-secondary">
+    <div className="navbar bg-gradient-to-r from-primary to-secondary z-10">
       <div className="navbar-start">
-        <NavDropdown></NavDropdown>
-        <button className="btn btn-ghost normal-case hidden lg:flex text-4xl cursive-font">
+        <button className="btn btn-ghost normal-case hidden lg:flex text-2xl cursive-font">
           Remarque
         </button>
       </div>
       <div className="navbar-center lg:flex">
-        <ul className="menu menu-horizontal">
-          <button
-            className="btn btn-ghost"
-            onClick={async (e) => {
-              e.preventDefault();
-              let foundMonday;
-              allSpreads.forEach(async (spread) => {
-                if (spread.monday === lastMondaysDate) {
-                  foundMonday = spread;
-                }
-              });
-              if (foundMonday === undefined) {
-                foundMonday = await addSpread({
-                  variables: {
-                    date: lastMondaysDate,
-                  },
-                }).then((data) => {
-                  setNewSpread(data);
-                  const newSpreadId = newSpread;
-                  setNewSpread(null);
-                  setTimeout(window.location.replace(`/${newSpreadId}`), 500);
-                });
-              }
-              window.location.replace(`/${foundMonday._id}`);
-            }}
-          >
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 rotate-180"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </button>
-          <li tabIndex={0}>
-            <button className="btn btn-accent mx-3 w-max-full">
-              <h2 className="font-bold">
-                {headerLeft} - {headerRight}
-                {/* <img
-                  src={Logo}
-                  alt="remarque logo"
-                  className="w-6 h-6 mb-5 mt-3 place-self-center"
-                ></img> */}
-              </h2>
+        <ul className="menu menu-horizontal content-center">
+          <li className="justify-start">
+            <button className="btn btn-ghost mt-2" onClick={handleLeftButton}>
+              <svg
+                aria-hidden="true"
+                className="w-5 h-5 rotate-180"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                ></path>
+              </svg>
             </button>
           </li>
-          <button
-            className="btn btn-ghost"
-            onClick={async (e) => {
-              e.preventDefault();
-              let foundMonday;
-              allSpreads.forEach(async (spread) => {
-                if (spread.monday === mondaysDate) {
-                  foundMonday = spread;
-                }
-              });
-              if (foundMonday === undefined) {
-                foundMonday = await addSpread({
-                  variables: {
-                    date: mondaysDate,
-                  },
-                }).then((data) => {
-                  setNewSpread(data);
-                  const newSpreadId = newSpread;
-                  setNewSpread(null);
-                  setTimeout(window.location.replace(`/${newSpreadId}`), 500);
-                });
-              }
-              window.location.replace(`/${foundMonday._id}`);
-            }}
-          >
+          <li tabIndex={0}>
+            <NavCalendar
+              allSpreads={allSpreads}
+              currentSpread={currentSpread}
+              headerLeft={headerLeft}
+              headerRight={headerRight}
+            ></NavCalendar>
+          </li>
+          <button className="btn btn-ghost mt-2" onClick={handleRightButton}>
             <svg
               aria-hidden="true"
               className="w-5 h-5"

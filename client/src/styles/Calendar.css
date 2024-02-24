@@ -61,6 +61,11 @@
   background-color: #e6e6e6;
 }
 
+.react-calendar__navigation button:enabled:hover ~ tr,
+.react-calendar__navigation button:enabled:focus ~ tr {
+  background-color: #f5f5f5;
+}
+
 .react-calendar__month-view__weekdays {
   text-align: center;
   text-transform: uppercase;
