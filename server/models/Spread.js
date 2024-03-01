@@ -6,11 +6,7 @@ const Layout = require("./Layout");
 
 const spreadSchema = new Schema({
   monday: {
-    type: String,
-    required: true,
-  },
-  sunday: {
-    type: String,
+    type: Date,
     required: true,
   },
   plannerItems: [

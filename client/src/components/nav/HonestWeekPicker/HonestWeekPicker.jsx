@@ -22,7 +22,7 @@ export const HonestWeekPicker = ({ onChange }) => {
 
   const isLeapYear = () => {
     let leapYear = new Date(new Date().getFullYear(), 1, 29);
-    return leapYear.getDate() == 29;
+    return leapYear.getDate() === 29;
   };
 
   const convertDate = (date) => {

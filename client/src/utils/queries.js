@@ -7,7 +7,6 @@ export const QUERY_USER = gql`
       spreads {
         _id
         monday
-        sunday
         plannerItems {
           _id
           body
@@ -49,7 +48,6 @@ export const QUERY_SPREAD = gql`
         i
       }
       monday
-      sunday
       plannerItems {
         _id
         body

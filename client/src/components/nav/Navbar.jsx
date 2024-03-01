@@ -2,37 +2,32 @@ import React, { useEffect, useState } from "react";
 import Auth from "../../utils/auth";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../../utils/mutations";
-import { useNavigate } from "react-router-dom";
 import NavCalendar from "./NavCalendar";
 import Logo from "../../RemarqueSmallLogo.svg";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/timezone";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("UTC");
 
 const getPreviousMonday = (dateString) => {
-  const day = dayjs(dateString);
-  return day.day(-6);
+  const day = dayjs.unix(dateString / 1000 + 18000);
+  return day.day(-6).startOf("day");
 };
 
 const getNextMonday = (dateString) => {
-  const day = dayjs(dateString);
-  return day.day(8);
+  const day = dayjs.unix(dateString / 1000 + 18000);
+  return day.day(8).startOf("day");
 };
 
 const Navbar = ({ allSpreads, currentSpread }) => {
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
-  const [headerLeft, setHeaderLeft] = useState(`${currentSpread.monday}`);
-  const [headerRight, setHeaderRight] = useState(`${currentSpread.sunday}`);
 
   const mondaysDate = getNextMonday(currentSpread.monday);
-  console.log(mondaysDate);
   const lastMondaysDate = getPreviousMonday(currentSpread.monday);
-
-  const routeChange = (e) => {
-    setNewSpread(e.target.key);
-    const newSpreadId = newSpread;
-    setNewSpread("");
-    window.location.replace(`/${newSpreadId}`);
-  };
+  console.log(Date(currentSpread.monday).toString());
 
   const handleLeftButton = async (e) => {
     e.preventDefault();
@@ -110,8 +105,6 @@ const Navbar = ({ allSpreads, currentSpread }) => {
             <NavCalendar
               allSpreads={allSpreads}
               currentSpread={currentSpread}
-              headerLeft={headerLeft}
-              headerRight={headerRight}
             ></NavCalendar>
           </li>
           <button className="btn btn-ghost mt-2" onClick={handleRightButton}>
