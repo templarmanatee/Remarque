@@ -49,14 +49,12 @@ const NavCalendar = ({ allSpreads, currentSpread }) => {
         .unix(spread.monday / 1000)
         .startOf("day")
         .toISOString();
-      console.log(formattedSpreadMonday);
-      console.log(formattedSelectedMonday);
       return formattedSpreadMonday === formattedSelectedMonday;
     });
 
     if (selectedSpread) {
       // Navigate to the spread page for the selected week
-      navigate(`/${selectedSpread._id}`);
+      window.location.href = `/${selectedSpread._id}`;
     } else {
       const newWeek = addSpread({
         variables: {
@@ -65,7 +63,7 @@ const NavCalendar = ({ allSpreads, currentSpread }) => {
       }).then((response) => {
         const data = response.data.addSpread;
         const newSpreadId = data._id;
-        navigate(`/${newSpreadId}`);
+        window.location.href = `/${newSpreadId}`;
       });
     }
   };
