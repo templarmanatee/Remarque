@@ -1,6 +1,6 @@
 // Originally sourced from: https://codesandbox.io/p/sandbox/react-week-picker-x1o2i7?file=%2Fsrc%2FApp.js%3A20%2C24
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./honestWeekStyle.css";
 import { v4 } from "uuid";
 import { ArrowLeft } from "./ArrowLeft";
@@ -16,9 +16,19 @@ export const HonestWeekPicker = ({ onChange }) => {
     lastDay: endOfWeek(new Date(), { weekStartsOn: 1 }),
   });
 
+  const prevWeekRef = useRef();
+
   useEffect(() => {
-    onChange && onChange(week);
-  }, [week]);
+    const prevWeek = prevWeekRef.current;
+    if (
+      prevWeek &&
+      (week.firstDay.getTime() !== prevWeek.firstDay.getTime() ||
+        week.lastDay.getTime() !== prevWeek.lastDay.getTime())
+    ) {
+      onChange && onChange(week);
+    }
+    prevWeekRef.current = week;
+  }, [week, onChange]);
 
   const isLeapYear = () => {
     let leapYear = new Date(new Date().getFullYear(), 1, 29);

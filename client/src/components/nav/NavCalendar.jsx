@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import dayOfYear from "dayjs/plugin/dayOfYear";
@@ -23,36 +23,50 @@ const NavCalendar = ({ allSpreads, currentSpread }) => {
       .format("YYYY-MM-DD")
   );
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
-  const [newSpread, setNewSpread] = useState("");
   const [week, setWeek] = useState("");
   const navigate = useNavigate();
 
-  console.log(currentSpread.monday);
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    return () => {
+      isFirstRender.current = true;
+    };
+  }, []);
 
-  const onChange = (week) => {
+  const onChange = async (week) => {
     setWeek(week);
     console.log("First day of week: " + week.firstDay);
 
     // Format the selected week's first day for comparison
     const formattedSelectedMonday = dayjs
       .unix(week.firstDay / 1000)
-      .startOf("day");
+      .startOf("day")
+      .toISOString();
 
     // Find the spread for the selected week
     const selectedSpread = allSpreads.find((spread) => {
-      // Convert the spread's Monday from Unix time (seconds) to milliseconds and format for comparison
       const formattedSpreadMonday = dayjs
-        .unix(spread.monday / 1000 + 1)
-        .startOf("day");
+        .unix(spread.monday / 1000)
+        .startOf("day")
+        .toISOString();
+      console.log(formattedSpreadMonday);
+      console.log(formattedSelectedMonday);
       return formattedSpreadMonday === formattedSelectedMonday;
     });
 
     if (selectedSpread) {
       // Navigate to the spread page for the selected week
-      navigate(`/spread/${selectedSpread._id}`);
+      navigate(`/${selectedSpread._id}`);
     } else {
-      // Handle case where the spread for the selected week is not found
-      console.error("Spread for the selected week not found");
+      const newWeek = addSpread({
+        variables: {
+          date: dayjs(week.firstDay).toDate(),
+        },
+      }).then((response) => {
+        const data = response.data.addSpread;
+        const newSpreadId = data._id;
+        navigate(`/${newSpreadId}`);
+      });
     }
   };
 
