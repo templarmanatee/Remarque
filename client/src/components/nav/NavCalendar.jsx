@@ -76,12 +76,9 @@ const NavCalendar = ({ allSpreads, currentSpread }) => {
       <h2 className="font-bold">
         {thisMonday} - {thisSunday}
       </h2>
-      <div className="dropdown-content p-2 shadow-xl bg-base-100 rounded-box w-96 h-84 z-100">
-        <h1 className="text-center">Select a Week:</h1>
-        <div className="calendar-container">
-          <HonestWeekPicker onChange={onChange}></HonestWeekPicker>
-          {/* <Calendar onChange={setDate} /> */}
-        </div>
+      <div className="calendar-container dropdown-content">
+        <HonestWeekPicker onChange={onChange}></HonestWeekPicker>
+        {/* <Calendar onChange={setDate} /> */}
       </div>
     </label>
   );

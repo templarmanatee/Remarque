@@ -85,7 +85,7 @@ const resolvers = {
     // QCed
     addUser: async (parent, args) => {
       const user = await User.create(args);
-      const token = signToken(user);
+      const token = signToken(user); 
 
       const today = dayjs().tz();
       const dayOfWeek = today.day(); // Sunday = 0, Monday = 1, ..., Saturday = 6
@@ -151,7 +151,7 @@ const resolvers = {
     addPlannerItem: async (parent, { spreadId, body }, context) => {
       if (context.user) {
         // Set items in exact order of model
-        const plannerItem = await PlannerItem.create({ body });
+        const plannerItem = await PlannerItem.create({ body })
 
         await Spread.findByIdAndUpdate(spreadId, {
           $push: { plannerItems: plannerItem },

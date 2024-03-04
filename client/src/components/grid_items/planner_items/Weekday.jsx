@@ -26,11 +26,11 @@ const Weekday = ({ id, body, weekday }) => {
   }
 
   return (
-    <div className="w-full grid grid-cols-1 grid-flow-row text-left">
-      <div className="divider">
+    <div className="collapse w-full grid grid-cols-1 grid-flow-row text-left">
+      <div className="divider collapse-title">
         <span className="label-text">{`${getDayOfWeek(weekday)}`}</span>
       </div>
-      <div id="weekday-content" className="flex space-x-2">
+      <div id="weekday-content collapse-content" className="flex space-x-2">
         <FilledEntry></FilledEntry>
       </div>
     </div>
