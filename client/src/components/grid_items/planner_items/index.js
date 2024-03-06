@@ -1,5 +1,5 @@
-import FilledEntry from "./Planner";
-import NewEntryModal from "./Card";
+import JournalEntry from "./Planner";
+import Card from "./Card";
 import Weekday from "./Weekday";
 
-export { FilledEntry, NewEntryModal, Weekday };
+export { JournalEntry, Card, Weekday };

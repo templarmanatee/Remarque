@@ -11,6 +11,7 @@ const TimeDrop = ({ onChange }) => {
 
   return (
     <TimePicker
+      className=""
       id="time-picker"
       minTime="7:00am"
       maxTime="11:45pm"

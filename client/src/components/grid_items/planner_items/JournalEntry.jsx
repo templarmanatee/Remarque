@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import TimeDrop from "./TimeDrop";
-const FilledEntry = () => {
+const JournalEntry = () => {
   // State variables for user input and button text
   const [inputText, setInputText] = useState("");
-  const [buttonText, setButtonText] = useState("New Entry");
+  const [buttonText, setButtonText] = useState("");
   const [inputTime, setInputTime] = useState("09:00");
 
   // Update button text when input changes
@@ -40,4 +40,4 @@ const FilledEntry = () => {
   );
 };
 
-export default FilledEntry;
+export default JournalEntry;

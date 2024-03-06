@@ -40,29 +40,34 @@ const AddEntry = () => {
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box bg-white items-center">
-          <div id="modal-header" className="flex cols-2">
-            <input
-              type="text"
-              placeholder="Title: "
-              className="input w-full max-w-xs my-2"
-            />
+        <div className="modal-box bg-white grid-flow-row">
+          <div id="modal-header" className="flex">
+            <label className="input input-bordered flex items-center gap-2 rounded-md w-96 mr-4">
+              <input type="text" className="grow" placeholder="Entry:" />
+            </label>
+
             <TimeDrop
-              className="w-4"
+              className=""
               onChange={handleTimeChange}
               value={inputTime}
             ></TimeDrop>
           </div>
-          <input
+          <textarea
             type="text"
-            placeholder="Description: "
-            className="input w-full my-2"
+            placeholder="-Any additional notes you may have.&#10;-People, places, and things that don't &#10;fit in the title."
+            className="input w-full h-full my-2 rounded-md border-2"
           />
-          <input
-            type="text"
-            placeholder="Collection: "
-            className="input w-full my-2"
-          />
+          <details className="dropdown bottom-0 right-0">
+            <summary className="m-1 btn">Collection</summary>
+            <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+              <li>
+                <a>Item 1</a>
+              </li>
+              <li>
+                <a>Item 2</a>
+              </li>
+            </ul>
+          </details>
           <div className="modal-action">
             <label htmlFor="planner_entry" className="btn btn-sm btn-primary">
               Edit Entry
