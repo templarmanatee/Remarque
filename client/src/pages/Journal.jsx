@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
-import { GridLayout } from "../components/index";
+import { GridLayout, AddEntry } from "../components/index";
 import { Navbar } from "../components/nav/index";
 import InfoModal from "../components/info";
 import Auth from "../utils/auth";
@@ -42,9 +42,8 @@ const Journal = () => {
         <div className="w-full text-left">
           <GridLayout spread={userData.user.spreads.slice(-1)[0]} />
         </div>
-
-        <div className="sticky bottom-0 left-70 h-20 w-20">
-          <InfoModal />
+        <div className="fixed bottom-0 right-4 h-20 w-20">
+          <AddEntry></AddEntry>
         </div>
       </div>
     );
