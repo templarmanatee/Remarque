@@ -189,13 +189,16 @@ const resolvers = {
 
       throw new AuthenticationError("Not logged in");
     },
-    updatePlannerItem: async (parent, { _id, body }, context) => {
+    updatePlannerItem: async (parent, { _id, body, scheduled, status, collection }, context) => {
       if (context.user) {
         return await PlannerItem.findByIdAndUpdate(
           _id,
           {
             $set: {
               body: body,
+              scheduled: scheduled, 
+              status: status, 
+              collection: collection
             },
           },
           {

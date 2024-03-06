@@ -12,6 +12,8 @@ const typeDefs = gql`
     _id: ID
     body: String
     scheduled: Int
+    status: String
+    collection: ID
   }
 
   type Layout {
@@ -72,7 +74,7 @@ const typeDefs = gql`
       spreadId: ID!
     ): GridItem
     updateGridItem(_id: ID!, title: String, body: [String], i: Int): GridItem
-    addPlannerItem(spreadId: ID!, body: String): PlannerItem
+    addPlannerItem(spreadId: ID!, body: String, ): PlannerItem
     updatePlannerItem(_id: ID, body: String): PlannerItem
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User

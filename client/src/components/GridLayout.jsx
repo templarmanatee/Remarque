@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from "react";
-import { useQuery } from "@apollo/client";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { Planner, Card, Todo } from "./grid_items/index.js";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import { QUERY_SPREAD } from "../utils/queries.js";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -34,7 +32,7 @@ const Layout = ({ spread }) => {
       x: 0,
       y: 0,
       w: 2,
-      h: 4,
+      h: 5,
       minW: 1,
       maxW: 5,
       minH: 2,
