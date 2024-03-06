@@ -14,9 +14,9 @@ module.exports = {
     let plannerItems = [];
     console.log(week);
     for (let i = 0; i < 7; i++) {
-      const weekday = week[i].day();
+      const weekday = i;
       const plannerItem = await PlannerItem.create({
-        dayOfCurrentWeek: weekday,
+        scheduled: weekday,
       });
       plannerItems.push(plannerItem);
     }

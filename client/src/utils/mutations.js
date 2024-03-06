@@ -44,7 +44,7 @@ export const UPDATE_PLANNERITEM = gql`
     updatePlannerItem(_id: $id, body: $body) {
       _id
       body
-      dayOfCurrentWeek
+      scheduled
     }
   }
 `;

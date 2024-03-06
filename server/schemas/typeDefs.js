@@ -11,9 +11,7 @@ const typeDefs = gql`
   type PlannerItem {
     _id: ID
     body: String
-    scheduled: String!
-    status: String! 
-    collection: ID!
+    scheduled: Int
   }
 
   type Layout {

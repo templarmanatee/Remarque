@@ -5,7 +5,7 @@ const plannerItemSchema = new Schema({
   body: {
     type: String,
   },
-  dayOfCurrentWeek: {
+  scheduled: {
     type: Number,
   },
 });

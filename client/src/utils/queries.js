@@ -10,7 +10,7 @@ export const QUERY_USER = gql`
         plannerItems {
           _id
           body
-          dayOfCurrentWeek
+          scheduled
         }
         gridItems {
           _id

@@ -18,6 +18,7 @@ const Journal = () => {
 
   const { loading, error, data } = useQuery(QUERY_USER);
   const userData = data;
+  console.log(error);
 
   if (loading) return "Loading...";
   if (error) {
