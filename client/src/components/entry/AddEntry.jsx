@@ -78,7 +78,6 @@ const AddEntry = () => {
               style={{ width: "75%" }}
               className="flex rounded-md"
               onChange={handleCollectionChange}
-              multiple
             >
               <option value="">-- Select a Collection --</option>
               <option value="Monday">Planner: Monday</option>
