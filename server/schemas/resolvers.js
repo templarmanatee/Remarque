@@ -1,6 +1,10 @@
 const { AuthenticationError } = require("apollo-server-express");
 const dayjs = require("dayjs");
-const weekday = require("dayjs/plugin/weekday");
+const utc = require("dayjs/plugin/utc"); // If dealing with UTC dates
+const timezone = require("dayjs/plugin/timezone"); // For timezone support
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("UTC");
 
 const { User, Spread, GridItem, PlannerItem } = require("../models");
 const { signToken } = require("../utils/auth");
@@ -43,13 +47,12 @@ const resolvers = {
     spread: async (parent, { date }, context) => {
       if (context.user) {
         const day = new Date(date);
-        const monday = dayjs().day(1).toISOString();
+        const monday = dayjs().day(1);
         const spread = await Spread.findOne()
           .where("monday")
           .equals(monday)
           .where("userId")
           .equals(context.user._id);
-
         return spread;
       }
     },
@@ -84,19 +87,20 @@ const resolvers = {
       const user = await User.create(args);
       const token = signToken(user);
 
-      let monday = dayjs().day(1);
-      let sunday = dayjs().date(6);
-      const week = sevenDay(monday);
+      const today = dayjs().tz();
+      const dayOfWeek = today.day(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+      const recentMonday = today
+        .subtract(dayOfWeek === 0 ? 6 : dayOfWeek - 1, "day")
+        .startOf("day");
+      const week = sevenDay(recentMonday);
       const plannerItems = await createPlanner(week);
       const { gridItems, layoutItems } = await createGridTemplate();
       let layout = layoutItems;
       const userId = user._id;
 
-      monday = monday.toISOString().substring(0, 10);
-      sunday = sunday.toISOString().substring(0, 10);
+      const monday = recentMonday.toDate();
       const spread = await Spread.create({
         monday,
-        sunday,
         plannerItems,
         gridItems,
         layout,
@@ -118,19 +122,16 @@ const resolvers = {
     addSpread: async (parent, { date }, context) => {
       if (context.user) {
         const refDate = dayjs(date);
-        let monday = refDate.day(1);
-        let sunday = refDate.day(7);
-        const week = sevenDay(monday);
+        const mondayRef = refDate.day(1).startOf("day");
+        const week = sevenDay(mondayRef);
         const plannerItems = await createPlanner(week);
         const { gridItems, layoutItems } = await createGridTemplate();
         let layout = layoutItems;
         const userId = context.user._id;
 
-        monday = monday.toISOString().substring(0, 10);
-        sunday = sunday.toISOString().substring(0, 10);
+        let monday = mondayRef.toDate();
         const spread = await Spread.create({
           monday,
-          sunday,
           plannerItems,
           gridItems,
           layout,
@@ -147,10 +148,10 @@ const resolvers = {
       throw new AuthenticationError("Not logged in");
     },
 
-    addPlannerItem: async (parent, { spreadId, body }, context) => {
+    addPlannerItem: async (parent, { spreadId, body, scheduled, status, collection }, context) => {
       if (context.user) {
         // Set items in exact order of model
-        const plannerItem = await PlannerItem.create({ body });
+        const plannerItem = await PlannerItem.create({ body, scheduled, status, collection });
 
         await Spread.findByIdAndUpdate(spreadId, {
           $push: { plannerItems: plannerItem },
@@ -188,13 +189,16 @@ const resolvers = {
 
       throw new AuthenticationError("Not logged in");
     },
-    updatePlannerItem: async (parent, { _id, body }, context) => {
+    updatePlannerItem: async (parent, { _id, body, scheduled, status, collection }, context) => {
       if (context.user) {
         return await PlannerItem.findByIdAndUpdate(
           _id,
           {
             $set: {
               body: body,
+              scheduled: scheduled, 
+              status: status, 
+              collection: collection
             },
           },
           {

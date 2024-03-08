@@ -1,12 +1,13 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
-import { GridLayout, Navbar } from "../components/index";
+import { GridLayout } from "../components/index";
+import { AddEntry } from "../components/entry/index";
+import { Navbar } from "../components/nav/index";
 import InfoModal from "../components/info";
 import Auth from "../utils/auth";
 import { ADD_SPREAD } from "../utils/mutations";
 import { QUERY_SPREAD, QUERY_USER } from "../utils/queries";
 import { useParams } from "react-router-dom";
-
 const Journal = () => {
   const checkLoggedIn = () => {
     if (!Auth.loggedIn()) {
@@ -18,6 +19,7 @@ const Journal = () => {
 
   const { loading, error, data } = useQuery(QUERY_USER);
   const userData = data;
+  console.log(error);
 
   if (loading) return "Loading...";
   if (error) {
@@ -41,12 +43,9 @@ const Journal = () => {
         <div className="w-full text-left">
           <GridLayout spread={userData.user.spreads.slice(-1)[0]} />
         </div>
-
-        <div className="sticky bottom-0 left-70 h-20 w-20">
-          <InfoModal />
+        <div className="fixed bottom-0 right-4 h-20 w-20">
+          <AddEntry></AddEntry>
         </div>
-
-        <button></button>
       </div>
     );
   }

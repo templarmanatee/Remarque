@@ -7,11 +7,10 @@ export const QUERY_USER = gql`
       spreads {
         _id
         monday
-        sunday
         plannerItems {
           _id
           body
-          dayOfCurrentWeek
+          scheduled
         }
         gridItems {
           _id
@@ -49,11 +48,12 @@ export const QUERY_SPREAD = gql`
         i
       }
       monday
-      sunday
       plannerItems {
         _id
         body
-        dayOfCurrentWeek
+        scheduled
+        status
+        collections
       }
       layout {
         _id
@@ -77,6 +77,7 @@ export const USER_SPREADS = gql`
   query UserSpreads {
     userSpreads {
       _id
+      monday
     }
   }
 `;

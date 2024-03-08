@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from "react";
-import { useQuery } from "@apollo/client";
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { Planner, Card, Todo } from "./grid Items/index.js";
+import { Planner, Card, Todo } from "./grid_items/index.js";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import { QUERY_SPREAD } from "../utils/queries.js";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -34,10 +32,10 @@ const Layout = ({ spread }) => {
       x: 0,
       y: 0,
       w: 2,
-      h: 6,
+      h: 5,
       minW: 1,
       maxW: 5,
-      minH: 6,
+      minH: 2,
       maxH: 6,
       card: <Planner plannerItems={spread.plannerItems} />,
     },
@@ -61,15 +59,15 @@ const Layout = ({ spread }) => {
       maxH: 2,
       card: <Card cardItems={spread.gridItems[1]} />,
     },
-    { i: "3", x: 2, y: 0, w: 1, h: 2, card: <Todo /> },
+    { i: "3", x: 2, y: 0, w: 2, h: 2, card: <Todo /> },
     {
       i: "4",
       x: 2,
       y: 0,
       w: 1,
-      h: 3,
-      minH: 3,
-      maxH: 3,
+      h: 2,
+      minH: 2,
+      maxH: 2,
       card: <Card cardItems={spread.gridItems[2]} />,
     },
   ]);
@@ -78,7 +76,7 @@ const Layout = ({ spread }) => {
     <ResponsiveGridLayout
       className="layout"
       layouts={{ lg: items }}
-      breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+      breakpoints={{ lg: 640, md: 600, sm: 540, xs: 480, xxs: 0 }}
       cols={{ lg: 5, md: 4, sm: 3, xs: 2, xxs: 1 }}
       rowHeight={189}
       width={1000}

@@ -45,6 +45,11 @@
   font-family: "Reenie Beanie", cursive;
 }
 
+#time-picker {
+  border-radius: 30px;
+  height: 32px;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

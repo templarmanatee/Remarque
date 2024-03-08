@@ -59,7 +59,7 @@ const Card = ({ cardItems }) => {
   }
 
   return (
-    <div className="card card-compact card-bordered w-full bg-base-100 shadow-xl">
+    <div className="card card-compact card-bordered w-full h-full bg-base-100 shadow-xl">
       <Dragger />
       <textarea
         type="text"

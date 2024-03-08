@@ -40,11 +40,17 @@ export const UPDATE_GRIDITEM = gql`
 `;
 
 export const UPDATE_PLANNERITEM = gql`
-  mutation UpdatePlannerItem($id: ID, $body: String) {
+  mutation UpdatePlannerItem(
+    $id: ID!
+    $body: String
+    $scheduled: String
+    $status: String
+    $collection: ID
+  ) {
     updatePlannerItem(_id: $id, body: $body) {
       _id
       body
-      dayOfCurrentWeek
+      scheduled
     }
   }
 `;
