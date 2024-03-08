@@ -55,7 +55,7 @@ const typeDefs = gql`
   type Query {
     user: User
     allUsers: [User]
-    spread(date: String!): Spread
+    spread(date: String): Spread
     spreadById(_id: ID): Spread
     userSpreads: [Spread]
   }
@@ -74,8 +74,20 @@ const typeDefs = gql`
       spreadId: ID!
     ): GridItem
     updateGridItem(_id: ID!, title: String, body: [String], i: Int): GridItem
-    addPlannerItem(spreadId: ID!, body: String, ): PlannerItem
-    updatePlannerItem(_id: ID, body: String): PlannerItem
+    addPlannerItem(
+      spreadId: ID!
+      body: String
+      scheduled: String
+      status: String
+      collection: ID
+    ): PlannerItem
+    updatePlannerItem(
+      _id: ID
+      body: String
+      scheduled: String
+      status: String
+      collection: ID
+    ): PlannerItem
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User
     login(email: String!, password: String!): Auth

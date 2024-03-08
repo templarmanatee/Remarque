@@ -41,7 +41,7 @@ export const UPDATE_GRIDITEM = gql`
 
 export const UPDATE_PLANNERITEM = gql`
   mutation UpdatePlannerItem(
-    $id: ID
+    $id: ID!
     $body: String
     $scheduled: String
     $status: String

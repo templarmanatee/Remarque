@@ -8,12 +8,21 @@ import { ArrowRight } from "./ArrowRight";
 import { addMonths, endOfWeek, startOfWeek, subMonths } from "date-fns";
 import { getDaysInMonth } from "date-fns/esm";
 
-export const HonestWeekPicker = ({ onChange }) => {
+export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
+  // const [week, setWeek] = useState({
+  //   firstDay: startOfWeek(new Date(), { weekStartsOn: 1 }),
+  //   lastDay: endOfWeek(new Date(), { weekStartsOn: 1 }),
+  // });
+  //Weird hack begins courtesy of Prof. Sarah Van Wart
+  let start = Date.parse(monday);
+  start = new Date(start + 60 * 60 * 24 * 1000);
+
+  const [date, setDate] = useState(new Date(monday));
   const [week, setWeek] = useState({
-    firstDay: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    lastDay: endOfWeek(new Date(), { weekStartsOn: 1 }),
+    firstDay: startOfWeek(start, { weekStartsOn: 1 }),
+    lastDay: endOfWeek(start, { weekStartsOn: 1 }),
   });
 
   const prevWeekRef = useRef();
@@ -38,7 +47,7 @@ export const HonestWeekPicker = ({ onChange }) => {
   const convertDate = (date) => {
     let dt = new Date(date);
 
-    return `${dt.getDate()}.${dt.getMonth() + 1}.${dt.getFullYear()}.`;
+    return `${months[dt.getMonth() + 1]} ${dt.getDate()}, ${dt.getFullYear()}`;
   };
 
   const handleClick = (e) => {
@@ -192,7 +201,7 @@ export const HonestWeekPicker = ({ onChange }) => {
 
   return (
     <div
-      className="week-picker-display"
+      className="week-picker-display btn no-animation btn-neutral btn-circle w-72 mt-1"
       onBlur={() => setOpen(false)}
       onClick={() => setOpen(true)}
       tabIndex={0}

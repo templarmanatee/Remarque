@@ -51,7 +51,9 @@ export const QUERY_SPREAD = gql`
       plannerItems {
         _id
         body
-        dayOfCurrentWeek
+        scheduled
+        status
+        collections
       }
       layout {
         _id

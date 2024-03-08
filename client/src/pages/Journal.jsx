@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React from "react";
-import { GridLayout, AddEntry } from "../components/index";
+import { GridLayout } from "../components/index";
+import { AddEntry } from "../components/entry/index";
 import { Navbar } from "../components/nav/index";
 import InfoModal from "../components/info";
 import Auth from "../utils/auth";

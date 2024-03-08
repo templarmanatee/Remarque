@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import TimeDrop from "../components/grid_items/planner_items/TimeDrop";
+import TimeDrop from "../grid_items/planner_items/TimeDrop";
 const AddEntry = () => {
   const [inputText, setInputText] = useState("");
   const [inputTime, setInputTime] = useState("09:00");
   const [additionalNotes, setAdditionalNotes] = useState("");
-  const [collection, setCollection] = useState("");
+  const [collections, setCollections] = useState([]);
   const [status, setStatus] = useState("");
 
   const handleInputChange = (event) => {
@@ -16,7 +16,7 @@ const AddEntry = () => {
   };
 
   const handleCollectionChange = (event) => {
-    setCollection(event.target.value);
+    setCollections(event.target.value);
   };
 
   const handleStatusChange = (event) => {
@@ -28,11 +28,10 @@ const AddEntry = () => {
       inputText,
       inputTime,
       additionalNotes,
-      collection,
+      collections,
       status,
     };
     console.log(JSON.stringify(inputData));
-    // Add any additional submit logic here
   };
 
   return (
@@ -77,16 +76,16 @@ const AddEntry = () => {
           <div className="flex space-x-6">
             <select
               style={{ width: "75%" }}
-              className="input input-bordered flex rounded-md"
-              value={collection}
+              className="flex rounded-md"
               onChange={handleCollectionChange}
+              multiple
             >
               <option value="">-- Select a Collection --</option>
-              <option value="Planner: Monday">Planner: Monday</option>
-              <option value="Planner: Tuesday">Planner: Tuesday</option>
-              <option value="Planner: Wednesday">Planner: Wednesday</option>
-              <option value="Planner: Thursday">Planner: Thursday</option>
-              <option value="Planner: Friday">Planner: Friday</option>
+              <option value="Monday">Planner: Monday</option>
+              <option value="Tuesday">Planner: Tuesday</option>
+              <option value="Wednesday">Planner: Wednesday</option>
+              <option value="Thursday">Planner: Thursday</option>
+              <option value="Friday">Planner: Friday</option>
               <option value="Collection 1">Collection 1</option>
               <option value="Collection 2">Collection 2</option>
             </select>

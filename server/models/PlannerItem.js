@@ -6,8 +6,18 @@ const plannerItemSchema = new Schema({
     type: String,
   },
   scheduled: {
-    type: Number,
+    type: Date,
   },
+  status: {
+    type: String,
+  },
+  collections: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "GridItem",
+      required: true,
+    },
+  ],
 });
 
 const PlannerItem = model("PlannerItem", plannerItemSchema);

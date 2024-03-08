@@ -148,10 +148,10 @@ const resolvers = {
       throw new AuthenticationError("Not logged in");
     },
 
-    addPlannerItem: async (parent, { spreadId, body }, context) => {
+    addPlannerItem: async (parent, { spreadId, body, scheduled, status, collection }, context) => {
       if (context.user) {
         // Set items in exact order of model
-        const plannerItem = await PlannerItem.create({ body });
+        const plannerItem = await PlannerItem.create({ body, scheduled, status, collection });
 
         await Spread.findByIdAndUpdate(spreadId, {
           $push: { plannerItems: plannerItem },

@@ -69,18 +69,11 @@ const NavCalendar = ({ allSpreads, currentSpread }) => {
   };
 
   return (
-    <label
-      tabIndex={0}
-      className="dropdown dropdown-bottom btn no-animation btn-neutral btn-circle w-52 mt-1"
-    >
-      <h2 className="font-bold">
-        {thisMonday} - {thisSunday}
-      </h2>
-      <div className="calendar-container dropdown-content">
-        <HonestWeekPicker onChange={onChange}></HonestWeekPicker>
-        {/* <Calendar onChange={setDate} /> */}
-      </div>
-    </label>
+    <HonestWeekPicker
+      onChange={onChange}
+      monday={thisMonday}
+      sunday={thisSunday}
+    ></HonestWeekPicker>
   );
 };
 
