@@ -19,7 +19,6 @@ const Journal = () => {
 
   const { loading, error, data } = useQuery(QUERY_USER);
   const userData = data;
-  console.log(error);
 
   if (loading) return "Loading...";
   if (error) {
@@ -35,13 +34,18 @@ const Journal = () => {
       currentSpread = currentSpread[0];
     }
     return (
-      <div className="grid grid-flow-row">
+      <div className="grid grid-flow-row content-center">
         <Navbar
           allSpreads={userData.user.spreads}
           currentSpread={currentSpread}
+          className="align-center"
         />
         <div className="w-full text-left">
-          <GridLayout spread={userData.user.spreads.slice(-1)[0]} />
+          <GridLayout
+            allSpreads={userData.user.spreads}
+            currentSpread={currentSpread}
+            spread={userData.user.spreads.slice(-1)[0]}
+          />
         </div>
         <div className="fixed bottom-0 right-4 h-20 w-20">
           <AddEntry></AddEntry>

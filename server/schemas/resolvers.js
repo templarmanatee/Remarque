@@ -156,25 +156,11 @@ const resolvers = {
 
     addCollection: async (parent, { title }, context) => {
       if (context.user) {
-        //   const refDate = dayjs(date);
-        //   const mondayRef = refDate.day(1).startOf("day");
-        //   const week = sevenDay(mondayRef);
-        //   const plannerItems = await createPlanner(week);
-        //   const { gridItems, layoutItems } = await createGridTemplate();
-        //   let layout = layoutItems;
         const userId = context.user._id;
         const collection = await Collection.create({
           title,
           userId,
         });
-
-        // const spread = await Spread.create({
-        //     monday,
-        //     plannerItems,
-        //     gridItems,
-        //     layout,
-        //     userId,
-        // });
 
         await User.findByIdAndUpdate(context.user._id, {
           $push: { collections: collection },

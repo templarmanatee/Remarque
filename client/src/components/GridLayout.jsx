@@ -22,7 +22,7 @@ const convertLayout = async (cardType, plannerItems) => {
   return Card;
 };
 
-const Layout = ({ spread }) => {
+const Layout = ({ spread, currentSpread, allSpreads }) => {
   const [gridItems, setGridItems] = useState({});
   const [plannerItems, setPlannerItems] = useState({});
 
@@ -37,7 +37,13 @@ const Layout = ({ spread }) => {
       maxW: 5,
       minH: 2,
       maxH: 6,
-      card: <Planner plannerItems={spread.plannerItems} />,
+      card: (
+        <Planner
+          plannerItems={spread.plannerItems}
+          allSpreads={allSpreads}
+          currentSpread={currentSpread}
+        />
+      ),
     },
     {
       i: "1",
@@ -101,7 +107,13 @@ const Layout = ({ spread }) => {
   );
 };
 
-const GridLayout = ({ spread }) => {
-  return <Layout spread={spread} />;
+const GridLayout = ({ spread, allSpreads, currentSpread }) => {
+  return (
+    <Layout
+      spread={spread}
+      allSpreads={allSpreads}
+      currentSpread={currentSpread}
+    />
+  );
 };
 export default GridLayout;

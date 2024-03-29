@@ -201,12 +201,12 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
 
   return (
     <div
-      className="week-picker-display btn no-animation btn-neutral btn-circle w-72 mt-1"
+      className="week-picker-display btn no-animation btn-neutral btn-circle w-72 mt-1 z-10"
       onBlur={() => setOpen(false)}
       onClick={() => setOpen(true)}
       tabIndex={0}
     >
-      <p>
+      <p className="content-center">
         {convertDate(week.firstDay)} - {convertDate(week.lastDay)}
       </p>
       {open && (
