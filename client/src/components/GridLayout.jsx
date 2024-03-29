@@ -3,6 +3,7 @@ import { Responsive, WidthProvider } from "react-grid-layout";
 import { Planner, Card, Todo } from "./grid_items/index.js";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
+import { DndContext } from "@dnd-kit/core";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -47,7 +48,7 @@ const Layout = ({ spread, currentSpread, allSpreads }) => {
     },
     {
       i: "1",
-      x: 3,
+      x: 2,
       y: 0,
       w: 1,
       h: 2,
@@ -57,24 +58,13 @@ const Layout = ({ spread, currentSpread, allSpreads }) => {
     },
     {
       i: "2",
-      x: 4,
+      x: 3,
       y: 0,
       w: 1,
       h: 2,
       minH: 2,
       maxH: 2,
       card: <Card cardItems={spread.gridItems[1]} />,
-    },
-    { i: "3", x: 2, y: 0, w: 2, h: 2, card: <Todo /> },
-    {
-      i: "4",
-      x: 2,
-      y: 0,
-      w: 1,
-      h: 2,
-      minH: 2,
-      maxH: 2,
-      card: <Card cardItems={spread.gridItems[2]} />,
     },
   ]);
 
@@ -116,4 +106,32 @@ const GridLayout = ({ spread, allSpreads, currentSpread }) => {
     />
   );
 };
-export default GridLayout;
+
+const DndKitLayout = ({
+  spread,
+  allSpreads,
+  currentSpread,
+  userCollections,
+}) => {
+  console.log(userCollections);
+  return (
+    <div className="flex flex-col lg:flex-row">
+      <div className="p-2 lg:w-1/2">
+        <Planner
+          plannerItems={spread.plannerItems}
+          allSpreads={allSpreads}
+          currentSpread={currentSpread}
+        />
+      </div>
+      <div className="lg:w-2/3">
+        <DndContext>
+          {userCollections.map((collection) => {
+            return <Card cardItems={collection} key={collection._id}></Card>;
+          })}
+        </DndContext>
+      </div>
+    </div>
+  );
+};
+
+export default DndKitLayout;

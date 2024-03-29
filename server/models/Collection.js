@@ -5,27 +5,26 @@ const { Schema, model } = require("mongoose");
 // const Layout = require("./Layout");
 
 const collectionSchema = new Schema({
-    title: {
-        type: String,
-        default: "Note",
-        trim: true,
+  title: {
+    type: String,
+    trim: true,
+  },
+  plannerItems: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "PlannerItem",
+      required: true,
     },
-    plannerItems: [
-        {
-            type: Schema.Types.ObjectId,
-            ref: "PlannerItem",
-            required: true,
-        },
-    ],
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
+  ],
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
 collectionSchema.index({
-    userId: Schema.Types.ObjectId,
+  userId: Schema.Types.ObjectId,
 });
 
 const Collection = model("Collection", collectionSchema);

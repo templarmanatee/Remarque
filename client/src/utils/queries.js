@@ -4,6 +4,9 @@ export const QUERY_USER = gql`
   query User {
     user {
       _id
+      username
+      email
+      password
       spreads {
         _id
         monday
@@ -11,6 +14,8 @@ export const QUERY_USER = gql`
           _id
           body
           scheduled
+          status
+          collections
         }
         gridItems {
           _id
@@ -29,10 +34,15 @@ export const QUERY_USER = gql`
           maxW
           minH
           maxH
+          card
         }
         userId
       }
-      username
+      collections {
+        _id
+        title
+        userId
+      }
     }
   }
 `;

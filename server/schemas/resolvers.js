@@ -38,6 +38,10 @@ const resolvers = {
             path: "spreads",
             populate: "layout",
           },
+          {
+            path: "collections",
+            populate: "plannerItems",
+          },
         ])
         .sort({ monday: -1 });
       return user;
@@ -114,8 +118,27 @@ const resolvers = {
       });
       const firstSpread = spread._id;
 
+      let title = "Chores";
+      const exampleCollection1 = await Collection.create({
+        title,
+        userId,
+      });
+      const firstExampleCollection = exampleCollection1._id;
+
+      title = "Self Care";
+      const exampleCollection2 = await Collection.create({
+        title,
+        userId,
+      });
+      const secondExampleCollection = exampleCollection2._id;
+
       await User.findByIdAndUpdate(user._id, {
-        $push: { spreads: spread },
+        $push: {
+          spreads: spread,
+          collections: {
+            $each: [firstExampleCollection, secondExampleCollection],
+          },
+        },
       }).populate("spreads");
 
       return { token, user, firstSpread };
@@ -174,20 +197,17 @@ const resolvers = {
 
     addPlannerItem: async (
       parent,
-      { spreadId, body, scheduled, status, collection },
+      { title, body, scheduled, status, collections },
       context
     ) => {
       if (context.user) {
         // Set items in exact order of model
         const plannerItem = await PlannerItem.create({
+          title,
           body,
           scheduled,
           status,
-          collection,
-        });
-
-        await Spread.findByIdAndUpdate(spreadId, {
-          $push: { plannerItems: plannerItem },
+          collections,
         });
 
         return plannerItem;

@@ -33,6 +33,7 @@ const Journal = () => {
       });
       currentSpread = currentSpread[0];
     }
+    console.log(userData.user);
     return (
       <div className="grid grid-flow-row content-center">
         <Navbar
@@ -45,10 +46,11 @@ const Journal = () => {
             allSpreads={userData.user.spreads}
             currentSpread={currentSpread}
             spread={userData.user.spreads.slice(-1)[0]}
+            userCollections={userData.user.collections}
           />
         </div>
         <div className="fixed bottom-0 right-4 h-20 w-20">
-          <AddEntry></AddEntry>
+          <AddEntry userCollections={userData.user.collections}></AddEntry>
         </div>
       </div>
     );

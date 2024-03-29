@@ -31,6 +31,19 @@ export const ADD_SPREAD = gql`
   }
 `;
 
+export const ADD_PLANNERITEM = gql`
+  mutation addPlannerItem($title: String!, $body: String, $scheduled: String, $status: String, $collections: [ID]) {
+    addPlannerItem(title: $title, body: $body, scheduled: $scheduled, status: $status, collections: $collections) {
+      _id
+      title
+      body
+      scheduled 
+      status
+      collections
+    }
+  }
+`;
+
 export const UPDATE_GRIDITEM = gql`
   mutation UpdateGridItem($id: ID!, $title: String, $body: [String]) {
     updateGridItem(_id: $id, title: $title, body: $body) {

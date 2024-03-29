@@ -50,6 +50,12 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
     return `${months[dt.getMonth() + 1]} ${dt.getDate()}, ${dt.getFullYear()}`;
   };
 
+  const convertDateSmall = (date) => {
+    let dt = new Date(date);
+
+    return `${months[dt.getMonth() + 1]} ${dt.getDate()}`;
+  };
+
   const handleClick = (e) => {
     let localDate;
     if (e.target.id.includes("prev")) {
@@ -200,15 +206,20 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
   };
 
   return (
-    <div
-      className="week-picker-display btn no-animation btn-neutral btn-circle w-72 mt-1 z-10"
-      onBlur={() => setOpen(false)}
-      onClick={() => setOpen(true)}
-      tabIndex={0}
-    >
-      <p className="content-center">
-        {convertDate(week.firstDay)} - {convertDate(week.lastDay)}
-      </p>
+    <>
+      <div
+        className="week-picker-display btn no-animation btn-neutral btn-circle mt-1 z-10"
+        onBlur={() => setOpen(false)}
+        onClick={() => setOpen(true)}
+        tabIndex={0}
+      >
+        <p className="content-center hidden md:block">
+          {convertDate(week.firstDay)} - {convertDate(week.lastDay)}
+        </p>
+        <p className="content-center md:hidden">
+          {convertDateSmall(week.firstDay)} - {convertDateSmall(week.lastDay)}
+        </p>
+      </div>
       {open && (
         <div className="week-picker-options">
           <div className="title-week">
@@ -232,6 +243,6 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
           <div className="numbers-container">{renderDays()}</div>
         </div>
       )}
-    </div>
+    </>
   );
 };

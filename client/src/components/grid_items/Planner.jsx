@@ -76,10 +76,10 @@ const Planner = ({ plannerItems, allSpreads, currentSpread }) => {
   };
 
   return (
-    <div className="w-full grid grid-cols-1 grid-flow-row text-left border-2 center-content">
+    <div className="w-full h-[calc(100vh-8rem)] text-left border-r-2 center-content">
       <ul
         className="menu menu-horizontal w-full flex center-content"
-        style={{ "justify-content": "center" }}
+        style={{ justifyContent: "center" }}
       >
         <li className="justify-start">
           <button className="btn btn-ghost mt-2" onClick={handleLeftButton}>
@@ -120,14 +120,16 @@ const Planner = ({ plannerItems, allSpreads, currentSpread }) => {
           </svg>
         </button>
       </ul>
-      {plannerArray.map((item) => (
-        <Weekday
-          id={item._id}
-          key={item._id}
-          body={item.body}
-          weekday={item.scheduled}
-        />
-      ))}
+      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
+        {plannerArray.map((item) => (
+          <Weekday
+            id={item._id}
+            key={item._id}
+            body={item.body}
+            weekday={item.scheduled}
+          />
+        ))}
+      </div>
     </div>
   );
 };
