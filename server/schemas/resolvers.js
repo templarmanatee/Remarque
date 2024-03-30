@@ -32,7 +32,7 @@ const resolvers = {
           },
           {
             path: "spreads",
-            populate: "plannerItems ",
+            populate: "weeklyCollections ",
           },
           {
             path: "spreads",
@@ -103,15 +103,16 @@ const resolvers = {
         .subtract(dayOfWeek === 0 ? 6 : dayOfWeek - 1, "day")
         .startOf("day");
       const week = sevenDay(recentMonday);
-      const plannerItems = await createPlanner(week);
       const { gridItems, layoutItems } = await createGridTemplate();
       let layout = layoutItems;
       const userId = user._id;
+      const weeklyCollections = await createPlanner(week, userId);
+      console.log(weeklyCollections);
 
       const monday = recentMonday.toDate();
       const spread = await Spread.create({
         monday,
-        plannerItems,
+        weeklyCollections,
         gridItems,
         layout,
         userId,
@@ -153,7 +154,8 @@ const resolvers = {
         const refDate = dayjs(date);
         const mondayRef = refDate.day(1).startOf("day");
         const week = sevenDay(mondayRef);
-        const plannerItems = await createPlanner(week);
+        const weeklyCollections = await createPlanner(week);
+        console.log(weeklyCollections);
         const { gridItems, layoutItems } = await createGridTemplate();
         let layout = layoutItems;
         const userId = context.user._id;
@@ -161,7 +163,7 @@ const resolvers = {
         let monday = mondayRef.toDate();
         const spread = await Spread.create({
           monday,
-          plannerItems,
+          weeklyCollections,
           gridItems,
           layout,
           userId,

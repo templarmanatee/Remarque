@@ -2,20 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import TimeDrop from "../grid_items/planner_items/TimeDrop";
 import { ADD_PLANNERITEM } from "../../utils/mutations";
-import Select from "react-select/async";
-const AddEntry = ({ userCollections }) => {
+import { MultiSelect } from "react-multi-select-component";
+import makeAnimated from "react-select/animated";
+const AddEntry = ({ userCollections, spreadCollections }) => {
   const [inputText, setInputText] = useState("");
   const [inputTime, setInputTime] = useState("09:00");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [status, setStatus] = useState("");
   const [addPlannerItem, { error }] = useMutation(ADD_PLANNERITEM);
+  const [selected, setSelected] = useState([]);
 
-  const collectionOptions = userCollections.map((collection) => ({
+  const userOptions = userCollections.map((collection) => ({
     value: collection._id,
     label: collection.title,
   }));
 
-  const [collections, setCollections] = useState(collectionOptions);
+  const spreadOptions = spreadCollections.map((collection) => ({
+    value: collection._id,
+    label: collection.title,
+  }));
+
+  const allCollections = [...userOptions, ...spreadOptions];
+
+  const [collections, setCollections] = useState(allCollections);
 
   const handleInputChange = (event) => {
     setInputText(event.target.value);
@@ -38,7 +47,8 @@ const AddEntry = ({ userCollections }) => {
     console.log(inputText);
     console.log(inputTime);
     console.log(additionalNotes);
-    console.log(collections);
+    console.log(selected);
+    const selectedCollections = selected.map((option) => option.value);
     try {
       const mutationResponse = await addPlannerItem({
         variables: {
@@ -46,13 +56,18 @@ const AddEntry = ({ userCollections }) => {
           body: additionalNotes,
           scheduled: inputTime,
           status: status,
-          collections: collections,
+          collections: selectedCollections,
         },
       });
+      const plannerItemId = mutationResponse._id;
+
+      console.log(mutationResponse);
     } catch (e) {
       console.log(e);
     }
   };
+
+  const animatedComponents = makeAnimated();
 
   return (
     <>
@@ -118,12 +133,17 @@ const AddEntry = ({ userCollections }) => {
             value={additionalNotes}
             onChange={handleNotesChange}
           />
-          <div className="flex space-x-6">
-            <Select options={collections}></Select>
+          <div className="space-y-4">
+            <MultiSelect
+              options={allCollections}
+              value={selected}
+              onChange={setSelected}
+              labelledBy="Select"
+              className="custom-multiselect"
+            />
             <select
               style={{ width: "25%" }}
-              className="input input-bordered flex rounded-md"
-              value={status}
+              className="input input-bordered flex rounded-md justify-right"
               onChange={handleStatusChange}
             >
               <option value="">Status</option>

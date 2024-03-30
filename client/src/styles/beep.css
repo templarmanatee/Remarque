@@ -50,6 +50,15 @@
   height: 32px;
 }
 
+.modal-box {
+  overflow: visible;
+}
+
+.dropdown-content {
+  position: absolute;
+  z-index: 1050; /* Adjust this value based on your modal's z-index */
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

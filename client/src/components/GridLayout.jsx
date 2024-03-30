@@ -118,7 +118,7 @@ const DndKitLayout = ({
     <div className="flex flex-col lg:flex-row">
       <div className="p-2 lg:w-1/2">
         <Planner
-          plannerItems={spread.plannerItems}
+          weeklyCollections={spread.weeklyCollections}
           allSpreads={allSpreads}
           currentSpread={currentSpread}
         />

@@ -30,19 +30,19 @@ const typeDefs = gql`
     card: String
   }
 
-  type Spread {
-    _id: ID
-    monday: String!
-    plannerItems: [PlannerItem]!
-    gridItems: [GridItem]!
-    layout: [Layout]
-    userId: ID!
-  }
-
   type Collection {
     _id: ID
     title: String!
     plannerItems: [PlannerItem]
+    userId: ID!
+  }
+
+  type Spread {
+    _id: ID
+    monday: String!
+    weeklyCollections: [Collection]
+    gridItems: [GridItem]!
+    layout: [Layout]
     userId: ID!
   }
 

@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const PlannerItem = require("./PlannerItem");
+const Collection = require("./Collection");
 const GridItem = require("./GridItem");
 const Layout = require("./Layout");
 
@@ -9,11 +9,10 @@ const spreadSchema = new Schema({
     type: Date,
     required: true,
   },
-  plannerItems: [
+  weeklyCollections: [
     {
       type: Schema.Types.ObjectId,
-      ref: "PlannerItem",
-      required: true,
+      ref: "Collection",
     },
   ],
   // Do an include when you want to pull the griditems as well

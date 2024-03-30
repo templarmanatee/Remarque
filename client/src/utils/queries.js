@@ -10,12 +10,17 @@ export const QUERY_USER = gql`
       spreads {
         _id
         monday
-        plannerItems {
+        weeklyCollections {
           _id
-          body
-          scheduled
-          status
-          collections
+          title
+          userId
+          plannerItems {
+            _id
+            body
+            scheduled
+            status
+            collections
+          }
         }
         gridItems {
           _id
@@ -41,6 +46,13 @@ export const QUERY_USER = gql`
       collections {
         _id
         title
+        plannerItems {
+          _id
+          body
+          scheduled
+          status
+          collections
+        }
         userId
       }
     }

@@ -1,5 +1,5 @@
 const dayjs = require("dayjs");
-const { PlannerItem, GridItem, Layout } = require("../models");
+const { Collection, GridItem, Layout } = require("../models");
 
 module.exports = {
   sevenDay: (monday) => {
@@ -10,18 +10,18 @@ module.exports = {
     }
     return daysOfWeek;
   },
-  createPlanner: async (week) => {
-    let plannerItems = [];
-    console.log(week);
+  createPlanner: async (week, userId) => {
+    let weeklyCollections = [];
     for (let i = 0; i < 7; i++) {
       const weekday = i;
-      const plannerItem = await PlannerItem.create({
-        scheduled: weekday,
+      const collection = await Collection.create({
+        userId: userId,
+        title: weekday,
       });
-      plannerItems.push(plannerItem);
+      weeklyCollections.push(collection);
     }
 
-    return plannerItems;
+    return weeklyCollections;
   },
   createGridTemplate: async () => {
     const template = [

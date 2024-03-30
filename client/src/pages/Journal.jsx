@@ -22,6 +22,7 @@ const Journal = () => {
 
   if (loading) return "Loading...";
   if (error) {
+    console.log(error);
     window.location.replace("/login");
   }
 
@@ -34,6 +35,7 @@ const Journal = () => {
       currentSpread = currentSpread[0];
     }
     console.log(userData.user);
+    console.log(currentSpread);
     return (
       <div className="grid grid-flow-row content-center">
         <Navbar
@@ -50,7 +52,10 @@ const Journal = () => {
           />
         </div>
         <div className="fixed bottom-0 right-4 h-20 w-20">
-          <AddEntry userCollections={userData.user.collections}></AddEntry>
+          <AddEntry
+            userCollections={userData.user.collections}
+            spreadCollections={currentSpread.weeklyCollections}
+          ></AddEntry>
         </div>
       </div>
     );

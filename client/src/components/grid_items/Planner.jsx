@@ -10,10 +10,10 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("UTC");
 
-const Planner = ({ plannerItems, allSpreads, currentSpread }) => {
-  const plannerArray = plannerItems;
+const Planner = ({ weeklyCollections, allSpreads, currentSpread }) => {
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
+  console.log(weeklyCollections);
 
   const getPreviousMonday = (dateString) => {
     const day = dayjs.unix(dateString / 1000 + 18000);
@@ -121,12 +121,12 @@ const Planner = ({ plannerItems, allSpreads, currentSpread }) => {
         </button>
       </ul>
       <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
-        {plannerArray.map((item) => (
+        {weeklyCollections.map((collection) => (
           <Weekday
-            id={item._id}
-            key={item._id}
-            body={item.body}
-            weekday={item.scheduled}
+            id={collection._id}
+            key={collection._id}
+            items={collection.plannerItems}
+            weekday={collection.title}
           />
         ))}
       </div>
