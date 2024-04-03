@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const { Schema, model } = mongoose;
 
 const plannerItemSchema = new Schema({
+  title: {
+    type: String,
+  },
   body: {
     type: String,
   },

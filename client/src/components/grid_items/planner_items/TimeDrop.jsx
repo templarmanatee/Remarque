@@ -1,8 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TimePicker from "react-timepicker-c";
+import dayjs from "dayjs";
 
-const TimeDrop = ({ onChange }) => {
+const TimeDrop = ({ onChange, defaultTime }) => {
   const [timeValue, setTimeValue] = useState("");
+
+  const setIfDefault = (defaultTime) => {
+    const timeFormat = "hh:mma";
+    if (dayjs(defaultTime, timeFormat, true).isValid()) {
+      return defaultTime;
+    }
+  };
+
+  useEffect(() => {
+    const time = setIfDefault(defaultTime);
+    if (time) {
+      setTimeValue(defaultTime);
+    }
+  }, [defaultTime]);
 
   const handleTimeChange = (timeValue) => {
     setTimeValue(timeValue);

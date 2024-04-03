@@ -1,17 +1,25 @@
 const { AuthenticationError } = require("apollo-server-express");
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc"); // If dealing with UTC dates
-const timezone = require("dayjs/plugin/timezone"); // For timezone support
+const timezone = require("dayjs/plugin/timezone");
+const { GraphQLDateTime } = require("graphql-iso-date"); // For timezone support
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("UTC");
 
-const { User, Spread, GridItem, PlannerItem } = require("../models");
+const {
+  User,
+  Spread,
+  GridItem,
+  PlannerItem,
+  Collection,
+} = require("../models");
 const { signToken } = require("../utils/auth");
 const {
   sevenDay,
   createPlanner,
   createGridTemplate,
+  createTutorialEntries,
 } = require("../utils/weekCalc");
 
 const resolvers = {
@@ -26,11 +34,15 @@ const resolvers = {
           },
           {
             path: "spreads",
-            populate: "plannerItems ",
+            populate: "weeklyCollections ",
           },
           {
             path: "spreads",
             populate: "layout",
+          },
+          {
+            path: "collections",
+            populate: "plannerItems",
           },
         ])
         .sort({ monday: -1 });
@@ -93,23 +105,31 @@ const resolvers = {
         .subtract(dayOfWeek === 0 ? 6 : dayOfWeek - 1, "day")
         .startOf("day");
       const week = sevenDay(recentMonday);
-      const plannerItems = await createPlanner(week);
       const { gridItems, layoutItems } = await createGridTemplate();
       let layout = layoutItems;
       const userId = user._id;
+      const weeklyCollections = await createPlanner(week, userId);
+      console.log(weeklyCollections);
 
       const monday = recentMonday.toDate();
       const spread = await Spread.create({
         monday,
-        plannerItems,
+        weeklyCollections,
         gridItems,
         layout,
         userId,
       });
       const firstSpread = spread._id;
 
+      const collectionIds = await createTutorialEntries(userId, firstSpread);
+
       await User.findByIdAndUpdate(user._id, {
-        $push: { spreads: spread },
+        $push: {
+          spreads: spread,
+          collections: {
+            $each: [collectionIds.choresId, collectionIds.selfCareId],
+          },
+        },
       }).populate("spreads");
 
       return { token, user, firstSpread };
@@ -124,7 +144,8 @@ const resolvers = {
         const refDate = dayjs(date);
         const mondayRef = refDate.day(1).startOf("day");
         const week = sevenDay(mondayRef);
-        const plannerItems = await createPlanner(week);
+        const weeklyCollections = await createPlanner(week, context.user._id);
+        console.log(weeklyCollections);
         const { gridItems, layoutItems } = await createGridTemplate();
         let layout = layoutItems;
         const userId = context.user._id;
@@ -132,7 +153,7 @@ const resolvers = {
         let monday = mondayRef.toDate();
         const spread = await Spread.create({
           monday,
-          plannerItems,
+          weeklyCollections,
           gridItems,
           layout,
           userId,
@@ -148,16 +169,57 @@ const resolvers = {
       throw new AuthenticationError("Not logged in");
     },
 
-    addPlannerItem: async (parent, { spreadId, body, scheduled, status, collection }, context) => {
+    addCollection: async (parent, { title }, context) => {
       if (context.user) {
-        // Set items in exact order of model
-        const plannerItem = await PlannerItem.create({ body, scheduled, status, collection });
-
-        await Spread.findByIdAndUpdate(spreadId, {
-          $push: { plannerItems: plannerItem },
+        const userId = context.user._id;
+        const collection = await Collection.create({
+          title,
+          userId,
         });
 
-        return plannerItem;
+        await User.findByIdAndUpdate(context.user._id, {
+          $push: { collections: collection },
+        });
+
+        return collection;
+      }
+
+      throw new AuthenticationError("Not logged in");
+    },
+
+    addPlannerItem: async (
+      parent,
+      { title, body, scheduled, status, collections },
+      context
+    ) => {
+      if (context.user) {
+        try {
+          const plannerItem = await PlannerItem.create({
+            title,
+            body,
+            scheduled,
+            status,
+            collections,
+          });
+
+          if (collections && collections.length > 0) {
+            await Promise.all(
+              collections.map((collection) => {
+                return Collection.findByIdAndUpdate(collection, {
+                  $push: { plannerItems: plannerItem._id },
+                });
+              })
+            );
+            console.log("All collections updated successfully");
+          }
+
+          return plannerItem;
+        } catch (error) {
+          console.error("Error creating planner item:", error);
+          throw new Error("Failed to create planner item");
+        }
+      } else {
+        throw new Error("Unauthorized");
       }
     },
     // QCed
@@ -169,7 +231,15 @@ const resolvers = {
     ) => {
       if (context.user) {
         // Set items in exact order of model
-        const gridItem = await GridItem.create({ title, body, x, y, h, w, i });
+        const gridItem = await GridItem.create({
+          title,
+          body,
+          x,
+          y,
+          h,
+          w,
+          i,
+        });
 
         await Spread.findByIdAndUpdate(spreadId, {
           $push: { gridItems: gridItem },
@@ -189,16 +259,21 @@ const resolvers = {
 
       throw new AuthenticationError("Not logged in");
     },
-    updatePlannerItem: async (parent, { _id, body, scheduled, status, collection }, context) => {
+    updatePlannerItem: async (
+      parent,
+      { _id, title, body, scheduled, status, collections },
+      context
+    ) => {
       if (context.user) {
         return await PlannerItem.findByIdAndUpdate(
           _id,
           {
             $set: {
+              title: title,
               body: body,
-              scheduled: scheduled, 
-              status: status, 
-              collection: collection
+              scheduled: scheduled,
+              status: status,
+              collections: collections,
             },
           },
           {
@@ -236,6 +311,7 @@ const resolvers = {
       return { token, user };
     },
   },
+  ISODate: GraphQLDateTime,
 };
 
 module.exports = resolvers;

@@ -1,11 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useMutation } from "@apollo/client";
 import { FaRegSave } from "react-icons/fa";
 import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
-import FilledEntry from "./JournalEntry";
-const Weekday = ({ id, body, weekday }) => {
+import JournalEntry from "./JournalEntry";
+const Weekday = ({
+  id,
+  body,
+  weekday,
+  items,
+  userCollections,
+  spreadCollections,
+}) => {
+  const [plannerItems, setPlannerItems] = useState(items);
   const [updatePlannerItem] = useMutation(UPDATE_PLANNERITEM);
+
+  useEffect(() => {
+    setPlannerItems(items);
+  }, [items]);
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -26,12 +38,17 @@ const Weekday = ({ id, body, weekday }) => {
   }
 
   return (
-    <div className="collapse w-full grid grid-cols-1 grid-flow-row text-left">
-      <div className="divider collapse-title">
-        <span className="label-text">{`${getDayOfWeek(weekday)}`}</span>
-      </div>
-      <div id="weekday-content collapse-content" className="flex space-x-2">
-        <FilledEntry></FilledEntry>
+    <div className="w-full text-left m-2">
+      <div className="divider w-72">{`${getDayOfWeek(weekday)}`}</div>
+      <div id="weekday-content">
+        {plannerItems.map((item) => (
+          <JournalEntry
+            key={item._id}
+            entryDetails={item}
+            userCollections={userCollections}
+            spreadCollections={spreadCollections}
+          />
+        ))}
       </div>
     </div>
   );

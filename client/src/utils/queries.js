@@ -4,13 +4,24 @@ export const QUERY_USER = gql`
   query User {
     user {
       _id
+      username
+      email
+      password
       spreads {
         _id
         monday
-        plannerItems {
+        weeklyCollections {
           _id
-          body
-          scheduled
+          title
+          userId
+          plannerItems {
+            _id
+            title
+            body
+            scheduled
+            status
+            collections
+          }
         }
         gridItems {
           _id
@@ -29,10 +40,23 @@ export const QUERY_USER = gql`
           maxW
           minH
           maxH
+          card
         }
         userId
       }
-      username
+      collections {
+        _id
+        title
+        plannerItems {
+          _id
+          title
+          body
+          scheduled
+          status
+          collections
+        }
+        userId
+      }
     }
   }
 `;
@@ -48,12 +72,18 @@ export const QUERY_SPREAD = gql`
         i
       }
       monday
-      plannerItems {
+      weeklyCollections {
         _id
-        body
-        scheduled
-        status
-        collections
+        title
+        userId
+        plannerItems {
+          _id
+          title
+          body
+          scheduled
+          status
+          collections
+        }
       }
       layout {
         _id

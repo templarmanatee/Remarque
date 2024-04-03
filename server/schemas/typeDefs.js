@@ -1,6 +1,8 @@
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
+  scalar ISODate
+
   type GridItem {
     _id: ID
     title: String
@@ -10,10 +12,11 @@ const typeDefs = gql`
 
   type PlannerItem {
     _id: ID
+    title: String
     body: String
     scheduled: Int
     status: String
-    collection: ID
+    collections: [ID]
   }
 
   type Layout {
@@ -30,10 +33,17 @@ const typeDefs = gql`
     card: String
   }
 
+  type Collection {
+    _id: ID
+    title: String!
+    plannerItems: [PlannerItem]
+    userId: ID!
+  }
+
   type Spread {
     _id: ID
     monday: String!
-    plannerItems: [PlannerItem]!
+    weeklyCollections: [Collection]
     gridItems: [GridItem]!
     layout: [Layout]
     userId: ID!
@@ -45,6 +55,7 @@ const typeDefs = gql`
     email: String
     password: String
     spreads: [Spread]
+    collections: [Collection]
   }
 
   type Auth {
@@ -62,6 +73,7 @@ const typeDefs = gql`
 
   type Mutation {
     addSpread(date: String!): Spread
+    addCollection(title: String!): Collection
     updateSpread(_id: ID): Spread
     addGridItem(
       title: String!
@@ -75,18 +87,19 @@ const typeDefs = gql`
     ): GridItem
     updateGridItem(_id: ID!, title: String, body: [String], i: Int): GridItem
     addPlannerItem(
-      spreadId: ID!
+      title: String
       body: String
       scheduled: String
       status: String
-      collection: ID
+      collections: [ID]
     ): PlannerItem
     updatePlannerItem(
       _id: ID
+      title: String
       body: String
       scheduled: String
       status: String
-      collection: ID
+      collections: [ID]
     ): PlannerItem
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User

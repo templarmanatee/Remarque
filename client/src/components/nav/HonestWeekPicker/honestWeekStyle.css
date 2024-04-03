@@ -15,6 +15,12 @@
   font-size: 1rem;
 }
 
+@media (max-width: 768px) {
+  .week-picker-display {
+    width: 240px;
+  }
+}
+
 .week-picker-options {
   padding: 0.4rem;
   position: absolute;

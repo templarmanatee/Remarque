@@ -12,7 +12,7 @@ const SplashScreen = () => {
       <div className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg cursive-font">Welcome to Remarque!</h3>
-          <p className="py-2">a digital format for bullet journaling.</p>
+          <p className="py-2">A digital format for bullet journaling.</p>
           <p className="font-bold text-sm">
             we ask that new users follow these steps:
           </p>

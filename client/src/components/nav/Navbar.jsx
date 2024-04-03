@@ -83,7 +83,7 @@ const Navbar = ({ allSpreads, currentSpread }) => {
         </button>
       </div>
       <div className="navbar-center lg:flex">
-        <ul className="menu menu-horizontal content-center">
+        {/* <ul className="menu menu-horizontal content-center">
           <li className="justify-start">
             <button className="btn btn-ghost mt-2" onClick={handleLeftButton}>
               <svg
@@ -122,7 +122,7 @@ const Navbar = ({ allSpreads, currentSpread }) => {
               ></path>
             </svg>
           </button>
-        </ul>
+        </ul> */}
       </div>
       <div className="navbar-end">
         <a
