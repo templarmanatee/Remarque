@@ -1,6 +1,8 @@
 const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
+  scalar ISODate
+
   type GridItem {
     _id: ID
     title: String
@@ -10,6 +12,7 @@ const typeDefs = gql`
 
   type PlannerItem {
     _id: ID
+    title: String
     body: String
     scheduled: Int
     status: String
@@ -92,10 +95,11 @@ const typeDefs = gql`
     ): PlannerItem
     updatePlannerItem(
       _id: ID
+      title: String
       body: String
       scheduled: String
       status: String
-      collection: ID
+      collections: [ID]
     ): PlannerItem
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User

@@ -36,6 +36,7 @@ const Journal = () => {
     }
     console.log(userData.user);
     console.log(currentSpread);
+
     return (
       <div className="grid grid-flow-row content-center">
         <Navbar
@@ -55,6 +56,7 @@ const Journal = () => {
           <AddEntry
             userCollections={userData.user.collections}
             spreadCollections={currentSpread.weeklyCollections}
+            hidePlusLabel={false}
           ></AddEntry>
         </div>
       </div>

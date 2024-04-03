@@ -16,6 +16,7 @@ export const QUERY_USER = gql`
           userId
           plannerItems {
             _id
+            title
             body
             scheduled
             status
@@ -48,6 +49,7 @@ export const QUERY_USER = gql`
         title
         plannerItems {
           _id
+          title
           body
           scheduled
           status
@@ -70,12 +72,18 @@ export const QUERY_SPREAD = gql`
         i
       }
       monday
-      plannerItems {
+      weeklyCollections {
         _id
-        body
-        scheduled
-        status
-        collections
+        title
+        userId
+        plannerItems {
+          _id
+          title
+          body
+          scheduled
+          status
+          collections
+        }
       }
       layout {
         _id

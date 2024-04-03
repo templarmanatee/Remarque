@@ -1,7 +1,8 @@
 const { AuthenticationError } = require("apollo-server-express");
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc"); // If dealing with UTC dates
-const timezone = require("dayjs/plugin/timezone"); // For timezone support
+const timezone = require("dayjs/plugin/timezone");
+const { GraphQLDateTime } = require("graphql-iso-date"); // For timezone support
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("UTC");
@@ -203,16 +204,33 @@ const resolvers = {
       context
     ) => {
       if (context.user) {
-        // Set items in exact order of model
-        const plannerItem = await PlannerItem.create({
-          title,
-          body,
-          scheduled,
-          status,
-          collections,
-        });
+        try {
+          const plannerItem = await PlannerItem.create({
+            title,
+            body,
+            scheduled,
+            status,
+            collections,
+          });
 
-        return plannerItem;
+          if (collections && collections.length > 0) {
+            await Promise.all(
+              collections.map((collection) => {
+                return Collection.findByIdAndUpdate(collection, {
+                  $push: { plannerItems: plannerItem._id },
+                });
+              })
+            );
+            console.log("All collections updated successfully");
+          }
+
+          return plannerItem;
+        } catch (error) {
+          console.error("Error creating planner item:", error);
+          throw new Error("Failed to create planner item");
+        }
+      } else {
+        throw new Error("Unauthorized");
       }
     },
     // QCed
@@ -254,7 +272,7 @@ const resolvers = {
     },
     updatePlannerItem: async (
       parent,
-      { _id, body, scheduled, status, collection },
+      { _id, title, body, scheduled, status, collections },
       context
     ) => {
       if (context.user) {
@@ -262,10 +280,11 @@ const resolvers = {
           _id,
           {
             $set: {
+              title: title,
               body: body,
               scheduled: scheduled,
               status: status,
-              collection: collection,
+              collections: collections,
             },
           },
           {
@@ -303,6 +322,7 @@ const resolvers = {
       return { token, user };
     },
   },
+  ISODate: GraphQLDateTime,
 };
 
 module.exports = resolvers;

@@ -10,7 +10,12 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault("UTC");
 
-const Planner = ({ weeklyCollections, allSpreads, currentSpread }) => {
+const Planner = ({
+  weeklyCollections,
+  allSpreads,
+  currentSpread,
+  userCollections,
+}) => {
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
   console.log(weeklyCollections);
@@ -127,6 +132,8 @@ const Planner = ({ weeklyCollections, allSpreads, currentSpread }) => {
             key={collection._id}
             items={collection.plannerItems}
             weekday={collection.title}
+            spreadCollections={weeklyCollections}
+            userCollections={userCollections}
           />
         ))}
       </div>

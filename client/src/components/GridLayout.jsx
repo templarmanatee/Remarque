@@ -97,7 +97,7 @@ const Layout = ({ spread, currentSpread, allSpreads }) => {
   );
 };
 
-const GridLayout = ({ spread, allSpreads, currentSpread }) => {
+const GridLayout = ({ spread, allSpreads, currentSpread, userCollections }) => {
   return (
     <Layout
       spread={spread}
@@ -121,12 +121,20 @@ const DndKitLayout = ({
           weeklyCollections={spread.weeklyCollections}
           allSpreads={allSpreads}
           currentSpread={currentSpread}
+          userCollections={userCollections}
         />
       </div>
       <div className="lg:w-2/3">
         <DndContext>
           {userCollections.map((collection) => {
-            return <Card cardItems={collection} key={collection._id}></Card>;
+            return (
+              <Card
+                cardItems={collection}
+                key={collection._id}
+                userCollections={userCollections}
+                spreadCollections={spread.weeklyCollections}
+              ></Card>
+            );
           })}
         </DndContext>
       </div>

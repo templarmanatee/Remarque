@@ -32,9 +32,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// TODO: Add a function to automatically either:
-// TODO: Route to this week's spread, or make one if there isn't one
-
 const App = () => {
   return (
     <ApolloProvider client={client}>

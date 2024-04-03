@@ -1,16 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useMutation } from "@apollo/client";
 import TimeDrop from "../grid_items/planner_items/TimeDrop";
 import { ADD_PLANNERITEM } from "../../utils/mutations";
 import { MultiSelect } from "react-multi-select-component";
 import makeAnimated from "react-select/animated";
-const AddEntry = ({ userCollections, spreadCollections }) => {
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/timezone";
+import timezone from "dayjs/plugin/timezone";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
+dayjs.extend(utc);
+
+const AddEntry = ({
+  spreadCollections,
+  userCollections,
+  filledEntry,
+  hidePlusLabel,
+}) => {
+  const [addPlannerItem, { error }] = useMutation(ADD_PLANNERITEM);
   const [inputText, setInputText] = useState("");
   const [inputTime, setInputTime] = useState("09:00");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [status, setStatus] = useState("");
-  const [addPlannerItem, { error }] = useMutation(ADD_PLANNERITEM);
   const [selected, setSelected] = useState([]);
+  const [hideLabel, setHideLabel] = useState(false);
+
+  useEffect(() => {
+    setHideLabel(!hidePlusLabel);
+  }, [filledEntry]);
 
   const userOptions = userCollections.map((collection) => ({
     value: collection._id,
@@ -44,24 +61,35 @@ const AddEntry = ({ userCollections, spreadCollections }) => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    console.log(inputText);
-    console.log(inputTime);
-    console.log(additionalNotes);
-    console.log(selected);
+    const timeFormat = "h:mma";
+
+    const scheduledFormatted = dayjs(inputTime, timeFormat);
+    let scheduled;
+
+    if (scheduledFormatted.isValid()) {
+      scheduled = scheduledFormatted.year(1970).month(0).date(1);
+    } else {
+      console.error("Invalid input time format.");
+    }
+
     const selectedCollections = selected.map((option) => option.value);
+
     try {
+      console.log(inputText);
+      console.log(additionalNotes);
+      console.log(scheduled);
+      console.log(status);
+      console.log(selectedCollections);
       const mutationResponse = await addPlannerItem({
         variables: {
           title: inputText,
           body: additionalNotes,
-          scheduled: inputTime,
+          scheduled: scheduled,
           status: status,
           collections: selectedCollections,
         },
       });
       const plannerItemId = mutationResponse._id;
-
-      console.log(mutationResponse);
     } catch (e) {
       console.log(e);
     }
@@ -71,20 +99,22 @@ const AddEntry = ({ userCollections, spreadCollections }) => {
 
   return (
     <>
-      <label
-        htmlFor="planner_entry"
-        className="btn bg-accent border-2 btn-lg btn-circle rounded-full"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="3em"
-          height="3em"
-          viewBox="0 0 24 24"
-          style={{ display: !inputText ? "inline" : "none" }}
+      {hideLabel && ( // Render plus label if hidePlusLabel is false
+        <label
+          htmlFor="planner_entry"
+          className="btn bg-accent border-2 btn-lg btn-circle rounded-full"
         >
-          <path fill="" d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z" />
-        </svg>
-      </label>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="3em"
+            height="3em"
+            viewBox="0 0 24 24"
+            style={{ display: !inputText ? "inline" : "none" }}
+          >
+            <path fill="" d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z" />
+          </svg>
+        </label>
+      )}
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
       <div className="modal">

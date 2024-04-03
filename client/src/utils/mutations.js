@@ -36,10 +36,6 @@ export const ADD_PLANNERITEM = gql`
     addPlannerItem(title: $title, body: $body, scheduled: $scheduled, status: $status, collections: $collections) {
       _id
       title
-      body
-      scheduled 
-      status
-      collections
     }
   }
 `;
@@ -55,15 +51,18 @@ export const UPDATE_GRIDITEM = gql`
 export const UPDATE_PLANNERITEM = gql`
   mutation UpdatePlannerItem(
     $id: ID!
+    $title: String
     $body: String
     $scheduled: String
     $status: String
-    $collection: ID
+    $collections: [ID]
   ) {
-    updatePlannerItem(_id: $id, body: $body) {
+    updatePlannerItem(_id: $id, title: $title, body: $body, scheduled: $scheduled, status: $status, collections: $collections,) {
       _id
+      title
       body
       scheduled
+      collections
     }
   }
 `;
