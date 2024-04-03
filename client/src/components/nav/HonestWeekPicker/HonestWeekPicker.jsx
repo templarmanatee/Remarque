@@ -47,7 +47,7 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
   const convertDate = (date) => {
     let dt = new Date(date);
 
-    return `${months[dt.getMonth() + 1]} ${dt.getDate()}, ${dt.getFullYear()}`;
+    return `${months[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`;
   };
 
   const convertDateSmall = (date) => {
@@ -70,6 +70,7 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
     }
     const firstDay = startOfWeek(localDate, { weekStartsOn: 1 });
     const lastDay = endOfWeek(localDate, { weekStartsOn: 1 });
+    console.log(firstDay);
     setWeek({ firstDay, lastDay });
   };
 
@@ -209,7 +210,7 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
     <>
       <div
         className="week-picker-display btn no-animation btn-neutral btn-circle mt-1 z-10"
-        onBlur={() => setOpen(false)}
+        onBlur={() => setOpen(true)}
         onClick={() => setOpen(true)}
         tabIndex={0}
       >
