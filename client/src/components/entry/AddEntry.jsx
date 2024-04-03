@@ -36,12 +36,30 @@ const AddEntry = ({
 
   const spreadOptions = spreadCollections.map((collection) => ({
     value: collection._id,
-    label: collection.title,
+    label: getDayOfWeek(collection.title),
   }));
 
   const allCollections = [...userOptions, ...spreadOptions];
 
   const [collections, setCollections] = useState(allCollections);
+
+  function getDayOfWeek(num) {
+    const daysOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    if (num >= 0 && num <= 6) {
+      return daysOfWeek[num];
+    } else {
+      return num;
+    }
+  }
 
   const handleInputChange = (event) => {
     setInputText(event.target.value);
@@ -109,7 +127,6 @@ const AddEntry = ({
             width="3em"
             height="3em"
             viewBox="0 0 24 24"
-            style={{ display: !inputText ? "inline" : "none" }}
           >
             <path fill="" d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z" />
           </svg>
@@ -118,7 +135,7 @@ const AddEntry = ({
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box bg-white grid-flow-row">
+        <div className="modal-box bg-white">
           <div className="flex justify-end">
             <label
               htmlFor="planner_entry"

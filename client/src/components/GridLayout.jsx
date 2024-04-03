@@ -108,6 +108,7 @@ const GridLayout = ({ spread, allSpreads, currentSpread, userCollections }) => {
 };
 
 const DndKitLayout = ({
+  userId,
   spread,
   allSpreads,
   currentSpread,
@@ -122,6 +123,7 @@ const DndKitLayout = ({
           allSpreads={allSpreads}
           currentSpread={currentSpread}
           userCollections={userCollections}
+          userId={userId}
         />
       </div>
       <div className="lg:w-2/3">

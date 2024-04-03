@@ -19,6 +19,24 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
   const [status, setStatus] = useState(entryDetails.status);
   const [selected, setSelected] = useState([]);
 
+  function getDayOfWeek(num) {
+    const daysOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+
+    if (num >= 0 && num <= 6) {
+      return daysOfWeek[num];
+    } else {
+      return num;
+    }
+  }
+
   const userOptions = userCollections.map((collection) => ({
     value: collection._id,
     label: collection.title,
@@ -26,10 +44,11 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
 
   const spreadOptions = spreadCollections.map((collection) => ({
     value: collection._id,
-    label: collection.title,
+    label: getDayOfWeek(collection.title),
   }));
 
-  const allCollections = [...userOptions, ...spreadOptions];
+  let allCollections = [...userOptions, ...spreadOptions];
+  allCollections = allCollections;
 
   const [collections, setCollections] = useState(allCollections);
 

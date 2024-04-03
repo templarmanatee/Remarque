@@ -19,6 +19,7 @@ const {
   sevenDay,
   createPlanner,
   createGridTemplate,
+  createTutorialEntries,
 } = require("../utils/weekCalc");
 
 const resolvers = {
@@ -120,25 +121,13 @@ const resolvers = {
       });
       const firstSpread = spread._id;
 
-      let title = "Chores";
-      const exampleCollection1 = await Collection.create({
-        title,
-        userId,
-      });
-      const firstExampleCollection = exampleCollection1._id;
-
-      title = "Self Care";
-      const exampleCollection2 = await Collection.create({
-        title,
-        userId,
-      });
-      const secondExampleCollection = exampleCollection2._id;
+      const collectionIds = await createTutorialEntries(userId, firstSpread);
 
       await User.findByIdAndUpdate(user._id, {
         $push: {
           spreads: spread,
           collections: {
-            $each: [firstExampleCollection, secondExampleCollection],
+            $each: [collectionIds.choresId, collectionIds.selfCareId],
           },
         },
       }).populate("spreads");
@@ -155,7 +144,7 @@ const resolvers = {
         const refDate = dayjs(date);
         const mondayRef = refDate.day(1).startOf("day");
         const week = sevenDay(mondayRef);
-        const weeklyCollections = await createPlanner(week);
+        const weeklyCollections = await createPlanner(week, context.user._id);
         console.log(weeklyCollections);
         const { gridItems, layoutItems } = await createGridTemplate();
         let layout = layoutItems;

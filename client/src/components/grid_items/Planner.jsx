@@ -11,6 +11,7 @@ dayjs.extend(timezone);
 dayjs.tz.setDefault("UTC");
 
 const Planner = ({
+  userId,
   weeklyCollections,
   allSpreads,
   currentSpread,

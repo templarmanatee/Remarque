@@ -34,8 +34,6 @@ const Journal = () => {
       });
       currentSpread = currentSpread[0];
     }
-    console.log(userData.user);
-    console.log(currentSpread);
 
     return (
       <div className="grid grid-flow-row content-center">
@@ -44,12 +42,13 @@ const Journal = () => {
           currentSpread={currentSpread}
           className="align-center"
         />
-        <div className="w-full text-left">
+        <div>
           <GridLayout
             allSpreads={userData.user.spreads}
             currentSpread={currentSpread}
             spread={userData.user.spreads.slice(-1)[0]}
             userCollections={userData.user.collections}
+            userId={userData._id}
           />
         </div>
         <div className="fixed bottom-0 right-4 h-20 w-20">

@@ -1,5 +1,11 @@
 const dayjs = require("dayjs");
-const { Collection, GridItem, Layout } = require("../models");
+const {
+  Collection,
+  GridItem,
+  Layout,
+  PlannerItem,
+  User,
+} = require("../models");
 
 module.exports = {
   sevenDay: (monday) => {
@@ -71,5 +77,47 @@ module.exports = {
     }
 
     return { gridItems, layoutItems };
+  },
+  createTutorialEntries: async (spreadId, userId) => {
+    // Create Collections
+    let choresCollection = await Collection.create({
+      title: "Chores",
+      userId,
+    });
+    let choresId = choresCollection._id;
+
+    let selfCareCollection = await Collection.create({
+      title: "Self Care",
+      userId,
+    });
+    let selfCareId = selfCareCollection._id;
+
+    // Create Planner Items
+    const yoga = await PlannerItem.create({
+      title: "Yoga",
+      body: "Stretching helps set you up for a great day!",
+      scheduled: 48600, // 8:30am start of UNIX time
+      status: "O",
+      collections: [choresCollection._id],
+    });
+
+    const skincare = await PlannerItem.create({
+      title: "Skincare",
+      body: "Everybody needs it!",
+      scheduled: 51300, // 9:15am start of UNIX time
+      status: "O",
+      collections: [choresCollection._id, selfCareCollection._id],
+    });
+
+    // Update Collections with Planner Items
+    await Collection.findByIdAndUpdate(choresCollection._id, {
+      $push: { plannerItems: { $each: [yoga._id, skincare._id] } },
+    });
+
+    await Collection.findByIdAndUpdate(selfCareCollection._id, {
+      $push: { plannerItems: skincare._id },
+    });
+
+    return { choresId, selfCareId };
   },
 };
