@@ -6,7 +6,7 @@ const TimeDrop = ({ onChange, defaultTime }) => {
   const [timeValue, setTimeValue] = useState("");
 
   const setIfDefault = (defaultTime) => {
-    const timeFormat = "hh:mma";
+    const timeFormat = "h:mma";
     if (dayjs(defaultTime, timeFormat, true).isValid()) {
       return defaultTime;
     }
