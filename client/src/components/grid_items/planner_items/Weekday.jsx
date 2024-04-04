@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import { useMutation } from "@apollo/client";
 import { FaRegSave } from "react-icons/fa";
-import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
 import JournalEntry from "./JournalEntry";
+import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
 const Weekday = ({
   id,
   body,

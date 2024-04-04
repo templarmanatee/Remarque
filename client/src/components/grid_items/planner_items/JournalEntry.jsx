@@ -4,11 +4,9 @@ import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
 import { MultiSelect } from "react-multi-select-component";
 import TimeDrop from "./TimeDrop";
 import dayjs from "dayjs";
-import AddEntry from "../../entry/AddEntry";
 import makeAnimated from "react-select/animated";
 const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
   // State variables for user input and button text
-  console.log(entryDetails);
   const [updatePlannerItem, { error }] = useMutation(UPDATE_PLANNERITEM);
   const [inputText, setInputText] = useState("");
   const [buttonText, setButtonText] = useState("");
@@ -122,7 +120,6 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
     }
   }, [entryDetails.collections]);
 
-  // Update button text in useEffect to reflect changes
   useEffect(() => {
     handleTimeChange(entryDetails.scheduled);
     if (!entryDetails.scheduled) {
@@ -130,7 +127,7 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
     }
     const newButtonText = `${inputTime} ${inputText}`;
     setButtonText(newButtonText);
-  }, [entryDetails.scheduled, inputTime, inputText]); // Update on changes to any of these dependencies
+  }, [entryDetails.scheduled, inputTime, inputText]);
 
   return (
     <>

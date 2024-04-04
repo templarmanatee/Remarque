@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Weekday from "./planner_items/Weekday";
 import NavCalendar from "../nav/NavCalendar";
+import UpdateContext from "../UpdateContext";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../../utils/mutations";
 import dayjs from "dayjs";
@@ -17,6 +18,8 @@ const Planner = ({
   currentSpread,
   userCollections,
 }) => {
+  const { update } = useContext(UpdateContext);
+
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
   console.log(weeklyCollections);
@@ -126,7 +129,7 @@ const Planner = ({
           </svg>
         </button>
       </ul>
-      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
+      <div key={update} className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
         {weeklyCollections.map((collection) => (
           <Weekday
             id={collection._id}
