@@ -26,6 +26,7 @@ const AddEntry = ({
   const [selected, setSelected] = useState([]);
   const [hideLabel, setHideLabel] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
+  const [editCollection, setEditCollection] = useState();
 
   useEffect(() => {
     setHideLabel(!hidePlusLabel);
@@ -41,9 +42,10 @@ const AddEntry = ({
     label: getDayOfWeek(collection.title),
   }));
 
-  const allCollections = [...userOptions, ...spreadOptions];
-
-  const [collections, setCollections] = useState(allCollections);
+  const [collections, setCollections] = useState([
+    ...userOptions,
+    ...spreadOptions,
+  ]);
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -79,6 +81,14 @@ const AddEntry = ({
     setStatus(event.target.value);
   };
 
+  const handleCollectionSelect = (event) => {
+    setSelected(event.target.value);
+  };
+
+  const handleEditCollection = (event) => {
+    const collectionId = event.target.value; 
+  }
+
   return (
     <>
       {hideLabel && ( // Render plus label if hidePlusLabel is false
@@ -99,40 +109,42 @@ const AddEntry = ({
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box bg-white">
-          <div className="tabs tabs-lifted mb-4">
-            <button
-              className={`tab ${activeTab === "tab1" ? "tab-active" : ""}`}
-              onClick={() => setActiveTab("tab1")}
-            >
-              New Entry
-            </button>
-            <button
-              className={`tab ${activeTab === "tab2" ? "tab-active" : ""}`}
-              onClick={() => setActiveTab("tab2")}
-            >
-              Edit Collections
-            </button>
-          </div>
-          <div className="flex justify-end">
-            <label
-              htmlFor="planner_entry"
-              className="btn btn-sm btn-ghost btn-circle"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="#D1D5DB"
-                strokeWidth="2"
+        <div className="modal-box h-2/3 bg-white">
+          <div className="flex justify-between">
+            <div className="tabs tabs-lifted mb-4">
+              <button
+                className={`tab ${activeTab === "tab1" ? "tab-active" : ""}`}
+                onClick={() => setActiveTab("tab1")}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </label>
+                New Entry
+              </button>
+              <button
+                className={`tab ${activeTab === "tab2" ? "tab-active" : ""}`}
+                onClick={() => setActiveTab("tab2")}
+              >
+                Edit Collections
+              </button>
+            </div>
+            <div className="flex justify-end">
+              <label
+                htmlFor="planner_entry"
+                className="btn btn-sm btn-ghost btn-circle"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#D1D5DB"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </label>
+            </div>
           </div>
           {activeTab === "tab1" ? (
             <div>
@@ -142,7 +154,7 @@ const AddEntry = ({
                     type="text"
                     style={{ width: "75%" }}
                     className="textarea grow h-12 textarea-bordered rounded-md"
-                    placeholder="Entry:"
+                    placeholder="Entry Title:"
                     value={inputText}
                     onChange={handleInputChange}
                   />
@@ -160,9 +172,9 @@ const AddEntry = ({
                 value={additionalNotes}
                 onChange={handleNotesChange}
               />
-              <div className="space-y-4">
+              <div className="space-y-4 z-0">
                 <MultiSelect
-                  options={allCollections}
+                  options={collections}
                   value={selected}
                   onChange={setSelected}
                   labelledBy="Select"
@@ -173,9 +185,9 @@ const AddEntry = ({
                   className="input input-bordered flex rounded-md justify-right"
                   onChange={handleStatusChange}
                 >
-                  <option value="">Status</option>
-                  <option value="O">O</option>
-                  <option value="X">X</option>
+                  <option value="-">Note</option>
+                  <option value="O">Open</option>
+                  <option value="X">Closed</option>
                   <option value="&gt;">&gt;</option>
                 </select>
               </div>
@@ -199,8 +211,39 @@ const AddEntry = ({
               </div>
             </div>
           ) : (
-            <div>
-              
+            <div className="space-y-4">
+              <select
+                style={{ width: "100%" }}
+                className="input input-bordered flex rounded-md justify-right"
+                onChange={handleStatusChange}
+              >
+                {collections.map((collection) => {
+                  return (
+                    <option
+                      value={collection.value}
+                      onChange={handleCollectionSelect}
+                    >
+                      {collection.label}
+                    </option>
+                  );
+                })}
+                <option value="$new">New Collection</option>
+              </select>
+              <input
+                type="text"
+                style={{ width: "75%" }}
+                className="textarea grow h-12 textarea-bordered rounded-md"
+                placeholder="Collection Title: "
+                value={selected.value}
+                onChange={handleInputChange}
+              />
+              {collections.map((collection) => {
+                return (
+                  <>
+                    <div className="">{collection.label}</div>
+                  </>
+                );
+              })}
             </div>
           )}
         </div>
