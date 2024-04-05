@@ -28,6 +28,7 @@ const AddEntry = ({
   const [hideLabel, setHideLabel] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
   const [editCollection, setEditCollection] = useState(userCollections[0]);
+  const [newCollectionName, setNewCollectionName] = useState("");
 
   useEffect(() => {
     setHideLabel(!hidePlusLabel);
@@ -90,10 +91,14 @@ const AddEntry = ({
 
   const handleEditCollection = (event) => {
     const collectionId = event.target.value;
-    const selectedCollection = collections.find(
-      (collection) => collection.value === collectionId
-    );
-    setEditCollection(selectedCollection || userCollections[0]);
+    if (collectionId === "$new") {
+      setEditCollection({ value: "$new", label: "", plannerItems: [] });
+    } else {
+      const selectedCollection = collections.find(
+        (collection) => collection.value === collectionId
+      );
+      setEditCollection(selectedCollection || userCollections[0]);
+    }
   };
 
   useEffect(() => {}, [editCollection]);
@@ -118,160 +123,170 @@ const AddEntry = ({
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box h-3/5 bg-white">
-          <div className="flex justify-between">
-            <div className="tabs tabs-lifted mb-4">
-              <button
-                className={`tab ${activeTab === "tab1" ? "tab-active" : ""}`}
-                onClick={() => setActiveTab("tab1")}
-              >
-                New Entry
-              </button>
-              <button
-                className={`tab ${activeTab === "tab2" ? "tab-active" : ""}`}
-                onClick={() => setActiveTab("tab2")}
-              >
-                Edit Collections
-              </button>
-            </div>
-            <div className="flex justify-end">
-              <label
-                htmlFor="planner_entry"
-                className="btn btn-sm btn-ghost btn-circle"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="#D1D5DB"
-                  strokeWidth="2"
+        <div className="modal-box h-5/6 bg-white">
+          <div className="flex flex-col justify-between h-full">
+            <div className="flex justify-between">
+              <div className="tabs tabs-lifted mb-4">
+                <button
+                  className={`tab ${activeTab === "tab1" ? "tab-active" : ""}`}
+                  onClick={() => setActiveTab("tab1")}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </label>
-            </div>
-          </div>
-          {activeTab === "tab1" ? (
-            <div>
-              <div id="modal-header" className="flex justify-between my-2">
-                <div className="flex items-center gap-2 h-8">
-                  <input
-                    type="text"
-                    style={{ width: "75%" }}
-                    className="textarea grow h-12 textarea-bordered rounded-md"
-                    placeholder="Entry Title:"
-                    value={inputText}
-                    onChange={handleInputChange}
-                  />
-                  <TimeDrop
-                    style={{ width: "25%" }}
-                    onChange={setInputTime}
-                    value={inputTime}
-                  ></TimeDrop>
-                </div>
-              </div>
-              <textarea
-                type="text"
-                placeholder="-Any additional notes you may have.&#10;-People, places, and things that don't &#10;fit in the title."
-                className="textarea w-full h-32 my-2 rounded-md textarea-bordered"
-                value={additionalNotes}
-                onChange={handleNotesChange}
-              />
-              <div className="space-y-4 z-0">
-                <MultiSelect
-                  options={collections}
-                  value={selected}
-                  onChange={setSelected}
-                  labelledBy="Select"
-                  className="custom-multiselect"
-                />
-                <select
-                  style={{ width: "25%" }}
-                  className="input input-bordered flex rounded-md justify-right"
-                  onChange={handleStatusChange}
+                  New Entry
+                </button>
+                <button
+                  className={`tab ${activeTab === "tab2" ? "tab-active" : ""}`}
+                  onClick={() => setActiveTab("tab2")}
                 >
-                  <option value="-">Note</option>
-                  <option value="O">Open</option>
-                  <option value="X">Closed</option>
-                  <option value="&gt;">&gt;</option>
-                </select>
+                  Edit Collections
+                </button>
               </div>
-
-              <div className="modal-action">
+              <div className="flex justify-end">
                 <label
                   htmlFor="planner_entry"
-                  className="btn btn-sm btn-primary"
-                  onClick={(event) =>
-                    handleFormSubmit(event, {
-                      inputText,
-                      inputTime,
-                      additionalNotes,
-                      status,
-                      selected,
-                    })
-                  }
+                  className="btn btn-sm btn-ghost btn-circle"
                 >
-                  Submit Entry
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="#D1D5DB"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
                 </label>
               </div>
             </div>
-          ) : (
-            <div className="space-y-4 relative h-3/4">
-              <select
-                style={{ width: "100%" }}
-                className="input input-bordered flex rounded-md justify-right"
-                onChange={handleEditCollection}
-              >
-                {collections.map((collection) => {
-                  return (
-                    <option
-                      value={collection.value}
-                      onChange={handleEditCollection}
-                    >
-                      {collection.label}
-                    </option>
-                  );
-                })}
-                <option value="$new">New Collection</option>
-              </select>
+            {activeTab === "tab1" ? (
               <div>
-                <input
+                <div id="modal-header" className="flex justify-between my-2">
+                  <div className="flex items-center gap-2 h-8">
+                    <input
+                      type="text"
+                      style={{ width: "75%" }}
+                      className="textarea grow h-12 textarea-bordered rounded-md"
+                      placeholder="Entry Title:"
+                      value={inputText}
+                      onChange={handleInputChange}
+                    />
+                    <TimeDrop
+                      style={{ width: "25%" }}
+                      onChange={setInputTime}
+                      value={inputTime}
+                    ></TimeDrop>
+                  </div>
+                </div>
+                <textarea
                   type="text"
-                  style={{ width: "66%" }}
-                  className="textarea grow h-12 textarea-bordered rounded-md"
-                  placeholder="Collection Title: "
-                  value={editCollection.label}
-                  onChange={handleInputChange}
+                  placeholder="-Any additional notes you may have.&#10;-People, places, and things that don't &#10;fit in the title."
+                  className="textarea w-full h-32 my-2 rounded-md textarea-bordered"
+                  value={additionalNotes}
+                  onChange={handleNotesChange}
                 />
-                <button className="btn btn-outline">Edit Title</button>
-              </div>
+                <div className="space-y-4 z-0">
+                  <MultiSelect
+                    options={collections}
+                    value={selected}
+                    onChange={setSelected}
+                    labelledBy="Select"
+                    className="custom-multiselect"
+                  />
+                  <select
+                    style={{ width: "25%" }}
+                    className="input input-bordered flex rounded-md justify-right"
+                    onChange={handleStatusChange}
+                  >
+                    <option value="-">Note</option>
+                    <option value="O">Open</option>
+                    <option value="X">Closed</option>
+                    <option value="&gt;">&gt;</option>
+                  </select>
+                </div>
 
-              <div className="flex flex-col border-2 rounded-md h-48 space-y-1 overflow-y-auto">
-                {editCollection.plannerItems &&
-                  editCollection.plannerItems.map((plannerEntry, index) => {
+                <div className="modal-action">
+                  <label
+                    htmlFor="planner_entry"
+                    className="btn btn-sm btn-primary"
+                    onClick={(event) =>
+                      handleFormSubmit(event, {
+                        inputText,
+                        inputTime,
+                        additionalNotes,
+                        status,
+                        selected,
+                      })
+                    }
+                  >
+                    Submit Entry
+                  </label>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4 relative h-3/4">
+                <select
+                  style={{ width: "100%" }}
+                  className="input input-bordered flex rounded-md justify-right"
+                  onChange={handleEditCollection}
+                >
+                  {collections.map((collection) => {
                     return (
-                      <button
-                        className="btn btn-sm btn-outline btn-error justify-between"
-                        key={index}
+                      <option
+                        value={collection.value}
+                        onChange={handleEditCollection}
                       >
-                        <img src={trashImg} alt="My Icon" />
-                        {plannerEntry.title}
-                      </button>
+                        {collection.label}
+                      </option>
                     );
                   })}
-              </div>
+                  <option value="$new">New Collection</option>
+                </select>
 
-              <div className="absolute bottom-0 left-2 right-2 flex justify-between">
-                <button className="btn btn-outline btn-error">
-                  Delete Collection
-                </button>
+                {editCollection.value === "$new" ? (
+                  <div>
+                    <input
+                      type="text"
+                      style={{ width: "66%" }}
+                      className="textarea grow h-12 textarea-bordered rounded-md"
+                      placeholder="New Collection Name: "
+                      value={newCollectionName}
+                      onChange={(e) => setNewCollectionName(e.target.value)}
+                    />
+                    <button
+                      className="btn btn-outline"
+                      onClick={handleAddCollection}
+                    >
+                      Add Collection
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex flex-col border-2 rounded-md h-48 space-y-1 overflow-y-auto">
+                    {editCollection.plannerItems &&
+                      editCollection.plannerItems.map((plannerEntry, index) => {
+                        return (
+                          <button
+                            className="btn btn-sm btn-outline btn-error justify-between"
+                            key={index}
+                          >
+                            <img src={trashImg} alt="My Icon" />
+                            {plannerEntry.title}
+                          </button>
+                        );
+                      })}
+                  </div>
+                )}
+
+                <div className="flex justify-between">
+                  <button className="btn btn-outline btn-error">
+                    Delete Collection
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </>
