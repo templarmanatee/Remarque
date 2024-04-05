@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useMutation } from "@apollo/client";
+import trashImg from "../../assets/delete.svg";
 import TimeDrop from "../grid_items/planner_items/TimeDrop";
 import { ADD_PLANNERITEM } from "../../utils/mutations";
 import { MultiSelect } from "react-multi-select-component";
@@ -26,7 +27,7 @@ const AddEntry = ({
   const [selected, setSelected] = useState([]);
   const [hideLabel, setHideLabel] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
-  const [editCollection, setEditCollection] = useState();
+  const [editCollection, setEditCollection] = useState(userCollections[0]);
 
   useEffect(() => {
     setHideLabel(!hidePlusLabel);
@@ -35,11 +36,13 @@ const AddEntry = ({
   const userOptions = userCollections.map((collection) => ({
     value: collection._id,
     label: collection.title,
+    plannerItems: collection.plannerItems,
   }));
 
   const spreadOptions = spreadCollections.map((collection) => ({
     value: collection._id,
     label: getDayOfWeek(collection.title),
+    plannerItems: collection.plannerItems,
   }));
 
   const [collections, setCollections] = useState([
@@ -86,8 +89,14 @@ const AddEntry = ({
   };
 
   const handleEditCollection = (event) => {
-    const collectionId = event.target.value; 
-  }
+    const collectionId = event.target.value;
+    const selectedCollection = collections.find(
+      (collection) => collection.value === collectionId
+    );
+    setEditCollection(selectedCollection || userCollections[0]);
+  };
+
+  useEffect(() => {}, [editCollection]);
 
   return (
     <>
@@ -109,7 +118,7 @@ const AddEntry = ({
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
       <div className="modal">
-        <div className="modal-box h-2/3 bg-white">
+        <div className="modal-box h-3/5 bg-white">
           <div className="flex justify-between">
             <div className="tabs tabs-lifted mb-4">
               <button
@@ -211,17 +220,17 @@ const AddEntry = ({
               </div>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 relative h-3/4">
               <select
                 style={{ width: "100%" }}
                 className="input input-bordered flex rounded-md justify-right"
-                onChange={handleStatusChange}
+                onChange={handleEditCollection}
               >
                 {collections.map((collection) => {
                   return (
                     <option
                       value={collection.value}
-                      onChange={handleCollectionSelect}
+                      onChange={handleEditCollection}
                     >
                       {collection.label}
                     </option>
@@ -229,21 +238,38 @@ const AddEntry = ({
                 })}
                 <option value="$new">New Collection</option>
               </select>
-              <input
-                type="text"
-                style={{ width: "75%" }}
-                className="textarea grow h-12 textarea-bordered rounded-md"
-                placeholder="Collection Title: "
-                value={selected.value}
-                onChange={handleInputChange}
-              />
-              {collections.map((collection) => {
-                return (
-                  <>
-                    <div className="">{collection.label}</div>
-                  </>
-                );
-              })}
+              <div>
+                <input
+                  type="text"
+                  style={{ width: "66%" }}
+                  className="textarea grow h-12 textarea-bordered rounded-md"
+                  placeholder="Collection Title: "
+                  value={editCollection.label}
+                  onChange={handleInputChange}
+                />
+                <button className="btn btn-outline">Edit Title</button>
+              </div>
+
+              <div className="flex flex-col border-2 rounded-md h-48 space-y-1 overflow-y-auto">
+                {editCollection.plannerItems &&
+                  editCollection.plannerItems.map((plannerEntry, index) => {
+                    return (
+                      <button
+                        className="btn btn-sm btn-outline btn-error justify-between"
+                        key={index}
+                      >
+                        <img src={trashImg} alt="My Icon" />
+                        {plannerEntry.title}
+                      </button>
+                    );
+                  })}
+              </div>
+
+              <div className="absolute bottom-0 left-2 right-2 flex justify-between">
+                <button className="btn btn-outline btn-error">
+                  Delete Collection
+                </button>
+              </div>
             </div>
           )}
         </div>
