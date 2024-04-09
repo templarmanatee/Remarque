@@ -31,9 +31,30 @@ export const ADD_SPREAD = gql`
   }
 `;
 
+export const ADD_COLLECTION = gql`
+  mutation addCollection($title: String!) {
+    addCollection(title: $title) {
+      _id
+      title
+    }
+  }
+`;
+
 export const ADD_PLANNERITEM = gql`
-  mutation addPlannerItem($title: String!, $body: String, $scheduled: String, $status: String, $collections: [ID]) {
-    addPlannerItem(title: $title, body: $body, scheduled: $scheduled, status: $status, collections: $collections) {
+  mutation addPlannerItem(
+    $title: String!
+    $body: String
+    $scheduled: String
+    $status: String
+    $collections: [ID]
+  ) {
+    addPlannerItem(
+      title: $title
+      body: $body
+      scheduled: $scheduled
+      status: $status
+      collections: $collections
+    ) {
       _id
       title
     }
@@ -41,15 +62,24 @@ export const ADD_PLANNERITEM = gql`
 `;
 
 export const UPDATE_GRIDITEM = gql`
-  mutation UpdateGridItem($id: ID!, $title: String, $body: [String]) {
+  mutation updateGridItem($id: ID!, $title: String, $body: [String]) {
     updateGridItem(_id: $id, title: $title, body: $body) {
       _id
     }
   }
 `;
 
+export const UPDATE_COLLECTION = gql`
+  mutation updateCollection($id: ID!, $title: String) {
+    updateCollection(_id: $id, title: $title) {
+      _id
+      title
+    }
+  }
+`;
+
 export const UPDATE_PLANNERITEM = gql`
-  mutation UpdatePlannerItem(
+  mutation updatePlannerItem(
     $id: ID!
     $title: String
     $body: String
@@ -57,12 +87,37 @@ export const UPDATE_PLANNERITEM = gql`
     $status: String
     $collections: [ID]
   ) {
-    updatePlannerItem(_id: $id, title: $title, body: $body, scheduled: $scheduled, status: $status, collections: $collections,) {
+    updatePlannerItem(
+      _id: $id
+      title: $title
+      body: $body
+      scheduled: $scheduled
+      status: $status
+      collections: $collections
+    ) {
       _id
       title
       body
       scheduled
       collections
+    }
+  }
+`;
+
+export const DELETE_PLANNERITEM = gql`
+  mutation DeletePlannerItem($_id: ID!) {
+    deletePlannerItem(_id: $_id) {
+      _id
+      title
+    }
+  }
+`;
+
+export const DELETE_COLLECTION = gql`
+  mutation DeleteCollection($_id: ID!) {
+    deleteCollection(_id: $_id) {
+      _id
+      title
     }
   }
 `;

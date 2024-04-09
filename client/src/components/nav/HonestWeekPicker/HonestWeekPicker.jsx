@@ -209,7 +209,7 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
   return (
     <>
       <div
-        className="week-picker-display btn no-animation btn-neutral btn-circle mt-1 z-10"
+        className="week-picker-display btn no-animation btn-neutral btn-circle mt-1"
         onBlur={() => setOpen(true)}
         onClick={() => setOpen(true)}
         tabIndex={0}

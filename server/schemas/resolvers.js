@@ -259,27 +259,28 @@ const resolvers = {
 
       throw new AuthenticationError("Not logged in");
     },
-    updatePlannerItem: async (
-      parent,
-      { _id, title, body, scheduled, status, collections },
-      context
-    ) => {
+    updateCollection: async (parent, { _id, title }, context) => {
       if (context.user) {
-        return await PlannerItem.findByIdAndUpdate(
+        return await Collection.findByIdAndUpdate(
           _id,
           {
             $set: {
               title: title,
-              body: body,
-              scheduled: scheduled,
-              status: status,
-              collections: collections,
             },
           },
           {
             new: true,
           }
         );
+      }
+
+      throw new AuthenticationError("Not logged in");
+    },
+    updateGridItem: async (parent, args, context) => {
+      if (context.user) {
+        return await GridItem.findByIdAndUpdate(args._id, args, {
+          new: true,
+        });
       }
 
       throw new AuthenticationError("Not logged in");
@@ -291,6 +292,26 @@ const resolvers = {
         });
       }
 
+      throw new AuthenticationError("Not logged in");
+    },
+    deletePlannerItem: async (parent, { _id }, context) => {
+      if (context.user) {
+        const deletedItem = await PlannerItem.findByIdAndDelete(_id);
+        if (!deletedItem) {
+          throw new Error("Planner item not found.");
+        }
+        return deletedItem;
+      }
+      throw new AuthenticationError("Not logged in");
+    },
+    deleteCollection: async (parent, { _id }, context) => {
+      if (context.user) {
+        const deletedItem = await Collection.findByIdAndDelete(_id);
+        if (!deletedItem) {
+          throw new Error("Planner item not found.");
+        }
+        return deletedItem;
+      }
       throw new AuthenticationError("Not logged in");
     },
     login: async (parent, { email, password }) => {

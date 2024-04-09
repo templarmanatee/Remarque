@@ -2,7 +2,13 @@ import React, { useState, useEffect, useContext } from "react";
 import { useMutation } from "@apollo/client";
 import trashImg from "../../assets/delete.svg";
 import TimeDrop from "../grid_items/planner_items/TimeDrop";
-import { ADD_PLANNERITEM } from "../../utils/mutations";
+import {
+  ADD_PLANNERITEM,
+  ADD_COLLECTION,
+  UPDATE_COLLECTION,
+  DELETE_PLANNERITEM,
+  DELETE_COLLECTION,
+} from "../../utils/mutations";
 import { MultiSelect } from "react-multi-select-component";
 import makeAnimated from "react-select/animated";
 import dayjs from "dayjs";
@@ -19,37 +25,48 @@ const AddEntry = ({
   hidePlusLabel,
   handleFormSubmit,
 }) => {
-  const [addPlannerItem, { error }] = useMutation(ADD_PLANNERITEM);
+  const [addPlannerItem, { plannerItemError }] = useMutation(ADD_PLANNERITEM);
+  const [deletePlannerItem, { deleteItemError }] =
+    useMutation(DELETE_PLANNERITEM);
+  const [addCollection, { collectionError }] = useMutation(ADD_COLLECTION);
+  const [updateCollection, { updateError }] = useMutation(UPDATE_COLLECTION);
+  const [deleteCollection, { deleteCollectionError }] =
+    useMutation(DELETE_COLLECTION);
   const [inputText, setInputText] = useState("");
   const [inputTime, setInputTime] = useState("09:00");
   const [additionalNotes, setAdditionalNotes] = useState("");
   const [status, setStatus] = useState("");
   const [selected, setSelected] = useState([]);
-  const [hideLabel, setHideLabel] = useState(false);
   const [activeTab, setActiveTab] = useState("tab1");
-  const [editCollection, setEditCollection] = useState(userCollections[0]);
+  const [editCollection, setEditCollection] = useState(
+    userCollections[0] || []
+  );
+  const [plannerItems, setPlannerItems] = useState(
+    editCollection.plannerItems || []
+  );
   const [newCollectionName, setNewCollectionName] = useState("");
+  const [collectionSuccess, setCollectionSuccess] = useState(false);
+  const [deletionSuccess, setDeletionSuccess] = useState(false);
+  const [collections, setCollections] = useState([
+    ...userCollections,
+    ...spreadCollections,
+  ]);
 
   useEffect(() => {
-    setHideLabel(!hidePlusLabel);
-  }, [filledEntry]);
+    const userOptions = userCollections.map((collection) => ({
+      value: collection._id,
+      label: collection.title,
+      plannerItems: collection.plannerItems,
+    }));
 
-  const userOptions = userCollections.map((collection) => ({
-    value: collection._id,
-    label: collection.title,
-    plannerItems: collection.plannerItems,
-  }));
+    const spreadOptions = spreadCollections.map((collection) => ({
+      value: collection._id,
+      label: getDayOfWeek(collection.title),
+      plannerItems: collection.plannerItems,
+    }));
 
-  const spreadOptions = spreadCollections.map((collection) => ({
-    value: collection._id,
-    label: getDayOfWeek(collection.title),
-    plannerItems: collection.plannerItems,
-  }));
-
-  const [collections, setCollections] = useState([
-    ...userOptions,
-    ...spreadOptions,
-  ]);
+    setCollections([...userOptions, ...spreadOptions]);
+  }, [userCollections, spreadCollections]);
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -89,6 +106,74 @@ const AddEntry = ({
     setSelected(event.target.value);
   };
 
+  const handleCheckboxChange = (e, collection) => {
+    if (e.target.checked) {
+      setSelected([...selected, collection]);
+    } else {
+      setSelected(
+        selected.filter(
+          (selectedCollection) => selectedCollection.value !== collection.value
+        )
+      );
+    }
+  };
+
+  const handleDeleteEntry = async (event) => {
+    event.preventDefault();
+    const entryId = event.target.value;
+    try {
+      console.log(entryId);
+      const mutationResponse = await deletePlannerItem({
+        variables: { _id: entryId },
+      });
+      if (mutationResponse.data.deletePlannerItem) {
+        setDeletionSuccess(true);
+        setEditCollection((prevCollection) => ({
+          ...prevCollection,
+          plannerItems: prevCollection.plannerItems.filter(
+            (item) => item._id !== entryId
+          ),
+        }));
+      }
+      return mutationResponse;
+    } catch (error) {
+      console.error("Error deleting entry:", error);
+      return null;
+    }
+  };
+
+  const handleDeleteCollection = async (event) => {
+    const collectionId = editCollection.value;
+    try {
+      console.log(collectionId);
+      const mutationResponse = await deleteCollection({
+        variables: { _id: collectionId },
+      });
+      if (mutationResponse.data.deletePlannerItem) {
+        setCollectionSuccess(true);
+        // Remove the deleted collection from the collections state
+        setCollections((prevCollections) =>
+          prevCollections.filter(
+            (collection) => collection.value !== collectionId
+          )
+        );
+        // Reset editCollection to the first collection in the updated list or to an empty object if the list is empty
+        setEditCollection(
+          (prevCollections) =>
+            prevCollections[0] || {
+              value: "$new",
+              label: "New Collection",
+              plannerItems: [],
+            }
+        );
+      }
+      return mutationResponse;
+    } catch (error) {
+      console.error("Error deleting collection:", error);
+      return null;
+    }
+  };
+
   const handleEditCollection = (event) => {
     const collectionId = event.target.value;
     if (collectionId === "$new") {
@@ -101,28 +186,60 @@ const AddEntry = ({
     }
   };
 
-  useEffect(() => {}, [editCollection]);
+  const handleUpdateCollection = async (event) => {
+    event.preventDefault();
+    const selectedCollection = editCollection;
+    const title = newCollectionName;
+    const mutationResponse = await updateCollection({
+      variables: {
+        id: selectedCollection._id,
+        title: title,
+      },
+    });
+    console.log(mutationResponse);
+  };
+
+  const handleSubmitCollection = async (event) => {
+    event.preventDefault();
+    const title = newCollectionName;
+    try {
+      const collectionDetails = await addCollection({
+        variables: {
+          title: title,
+        },
+      });
+      if (collectionDetails) {
+        setCollectionSuccess(true);
+      }
+      return collectionDetails;
+    } catch (error) {
+      console.error("Error adding collection:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    setPlannerItems(editCollection.plannerItems || []);
+  }, [editCollection]);
 
   return (
     <>
-      {hideLabel && ( // Render plus label if hidePlusLabel is false
-        <label
-          htmlFor="planner_entry"
-          className="btn bg-accent border-2 btn-lg btn-circle rounded-full"
+      <label
+        htmlFor="planner_entry"
+        className="btn bg-accent border-2 btn-lg btn-circle rounded-full"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="3em"
+          height="3em"
+          viewBox="0 0 24 24"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="3em"
-            height="3em"
-            viewBox="0 0 24 24"
-          >
-            <path fill="" d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z" />
-          </svg>
-        </label>
-      )}
+          <path fill="" d="M11 19v-6H5v-2h6V5h2v6h6v2h-6v6Z" />
+        </svg>
+      </label>
 
       <input type="checkbox" id="planner_entry" className="modal-toggle" />
-      <div className="modal">
+      <div className="modal z-10">
         <div className="modal-box h-5/6 bg-white">
           <div className="flex flex-col justify-between h-full">
             <div className="flex justify-between">
@@ -188,13 +305,26 @@ const AddEntry = ({
                   onChange={handleNotesChange}
                 />
                 <div className="space-y-4 z-0">
-                  <MultiSelect
-                    options={collections}
-                    value={selected}
-                    onChange={setSelected}
-                    labelledBy="Select"
-                    className="custom-multiselect"
-                  />
+                  <div className="flex flex-col border-2 rounded-md h-48 overflow-y-auto">
+                    {collections.map((collection, index) => (
+                      <label
+                        key={index}
+                        className="inline-flex items-center m-2"
+                      >
+                        <input
+                          type="checkbox"
+                          className="form-checkbox h-5 w-5 text-gray-600"
+                          name="collectionCheckbox"
+                          value={collection.value}
+                          checked={selected.some((selectedCollection) => selectedCollection.value === collection.value)}
+                          onChange={(e) => handleCheckboxChange(e, collection)}
+                        />
+                        <span className="ml-2 text-gray-700">
+                          {collection.label}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
                   <select
                     style={{ width: "25%" }}
                     className="input input-bordered flex rounded-md justify-right"
@@ -203,7 +333,6 @@ const AddEntry = ({
                     <option value="-">Note</option>
                     <option value="O">Open</option>
                     <option value="X">Closed</option>
-                    <option value="&gt;">&gt;</option>
                   </select>
                 </div>
 
@@ -246,44 +375,74 @@ const AddEntry = ({
                 </select>
 
                 {editCollection.value === "$new" ? (
-                  <div>
-                    <input
-                      type="text"
-                      style={{ width: "66%" }}
-                      className="textarea grow h-12 textarea-bordered rounded-md"
-                      placeholder="New Collection Name: "
-                      value={newCollectionName}
-                      onChange={(e) => setNewCollectionName(e.target.value)}
-                    />
-                    <button
-                      className="btn btn-outline"
-                      onClick={handleAddCollection}
-                    >
-                      Add Collection
-                    </button>
+                  <div className="space-x-1">
+                    <label className="form-control">
+                      <div className="flex items-center">
+                        <input
+                          type="text"
+                          style={{ width: "60%" }}
+                          className="input grow h-12 textarea-bordered rounded-md mr-2"
+                          placeholder="New Collection Name: "
+                          value={newCollectionName}
+                          onChange={(e) => setNewCollectionName(e.target.value)}
+                        />
+                        <button
+                          className="btn btn-outline"
+                          onClick={handleSubmitCollection}
+                        >
+                          Add Collection
+                        </button>
+                      </div>
+                      {collectionSuccess && (
+                        <label className="label">
+                          <span className="label-text-alt">
+                            Collection Added!
+                          </span>
+                        </label>
+                      )}
+                    </label>
                   </div>
                 ) : (
-                  <div className="flex flex-col border-2 rounded-md h-48 space-y-1 overflow-y-auto">
-                    {editCollection.plannerItems &&
-                      editCollection.plannerItems.map((plannerEntry, index) => {
+                  <>
+                    <div className="space-x-1">
+                      <input
+                        type="text"
+                        style={{ width: "66%" }}
+                        className="textarea grow h-12 textarea-bordered rounded-md"
+                        placeholder="Collection Name: "
+                        value={editCollection.label}
+                        onChange={(e) => setNewCollectionName(e.target.value)}
+                      />
+                      <button
+                        onClick={handleUpdateCollection}
+                        className="btn btn-outline"
+                      >
+                        Edit Collection
+                      </button>
+                    </div>
+                    <div className="flex flex-col border-2 rounded-md h-48 overflow-y-auto">
+                      {plannerItems.map((plannerEntry, index) => {
                         return (
                           <button
-                            className="btn btn-sm btn-outline btn-error justify-between"
+                            className="btn btn-sm btn-outline btn-error justify-between m-0.5"
                             key={index}
+                            value={plannerEntry._id}
+                            onClick={handleDeleteEntry}
                           >
-                            <img src={trashImg} alt="My Icon" />
+                            <img src={trashImg} alt="Delete Entry Icon" />
                             {plannerEntry.title}
                           </button>
                         );
                       })}
-                  </div>
+                      <button
+                        className="btn btn-outline absolute bottom-0"
+                        onClick={handleDeleteCollection}
+                      >
+                        Delete Collection
+                      </button>
+                    </div>
+                  </>
                 )}
-
-                <div className="flex justify-between">
-                  <button className="btn btn-outline btn-error">
-                    Delete Collection
-                  </button>
-                </div>
               </div>
             )}
           </div>

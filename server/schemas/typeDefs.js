@@ -74,6 +74,7 @@ const typeDefs = gql`
   type Mutation {
     addSpread(date: String!): Spread
     addCollection(title: String!): Collection
+    updateCollection(_id: ID, title: String): Collection
     updateSpread(_id: ID): Spread
     addGridItem(
       title: String!
@@ -101,6 +102,8 @@ const typeDefs = gql`
       status: String
       collections: [ID]
     ): PlannerItem
+    deletePlannerItem(_id: ID!): PlannerItem
+    deleteCollection(_id: ID!): Collection
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User
     login(email: String!, password: String!): Auth

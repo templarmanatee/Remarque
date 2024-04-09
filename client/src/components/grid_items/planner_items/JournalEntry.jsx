@@ -15,7 +15,14 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
   );
   const [additionalNotes, setAdditionalNotes] = useState(entryDetails.body);
   const [status, setStatus] = useState(entryDetails.status);
-  const [selected, setSelected] = useState([]);
+  const [selected, setSelected] = useState(
+    entryDetails.collections.map((collectionId) => {
+      const collection =
+        userCollections.find((c) => c._id === collectionId) ||
+        spreadCollections.find((c) => c._id === collectionId);
+      return { value: collection._id, label: collection.title };
+    })
+  );
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -64,6 +71,18 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
 
   const handleStatusChange = (event) => {
     setStatus(event.target.value);
+  };
+
+  const handleCheckboxChange = (e, collection) => {
+    if (e.target.checked) {
+      setSelected((prevSelected) => [...prevSelected, collection]);
+    } else {
+      setSelected((prevSelected) =>
+        prevSelected.filter(
+          (selectedCollection) => selectedCollection.value !== collection.value
+        )
+      );
+    }
   };
 
   const handleFormSubmit = async (event) => {
@@ -125,7 +144,10 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
     if (!entryDetails.scheduled) {
       setInputTime("");
     }
-    const newButtonText = `${inputTime} ${inputText}`;
+    let newButtonText = `${inputTime} ${inputText}`;
+    if (status === "-") {
+      newButtonText = `- ${inputText}`;
+    }
     setButtonText(newButtonText);
   }, [entryDetails.scheduled, inputTime, inputText]);
 
@@ -135,7 +157,9 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
         htmlFor={entryDetails._id}
         className="btn bg-transparent border-2 btn-sm rounded-full m-1"
       >
-        <h1 className="text-s">{buttonText}</h1>
+        <h1 className={`text-s ${status === "X" ? "line-through" : ""}`}>
+          {buttonText}
+        </h1>
       </label>
       <input type="checkbox" id={entryDetails._id} className="modal-toggle" />
       <div className="modal">
@@ -186,23 +210,33 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
             onChange={handleNotesChange}
           />
           <div className="space-y-4">
-            <MultiSelect
-              options={allCollections}
-              value={selected}
-              onChange={setSelected}
-              labelledBy="Select"
-              className="custom-multiselect"
-            />
+            <div className="flex flex-col">
+              {collections.map((collection, index) => (
+                <label key={index} className="inline-flex items-center mt-3">
+                  <input
+                    type="checkbox"
+                    className="form-checkbox h-5 w-5 text-gray-600"
+                    name="collectionCheckbox"
+                    value={collection.value}
+                    checked={selected.some(
+                      (selectedCollection) =>
+                        selectedCollection.value === collection.value
+                    )}
+                    onChange={(e) => handleCheckboxChange(e, collection)}
+                  />
+                  <span className="ml-2 text-gray-700">{collection.label}</span>
+                </label>
+              ))}
+            </div>
             <select
               style={{ width: "25%" }}
               className="input input-bordered flex rounded-md justify-right"
               onChange={handleStatusChange}
               defaultValue={status}
             >
-              <option value="">Status</option>
-              <option value="O">O</option>
-              <option value="X">X</option>
-              <option value="&gt;">&gt;</option>
+              <option value="-">Note</option>
+              <option value="O">Open</option>
+              <option value="X">Closed</option>
             </select>
           </div>
 
@@ -212,7 +246,7 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
               className="btn btn-sm btn-primary"
               onClick={handleFormSubmit}
             >
-              Submit Entry
+              Edit Entry
             </label>
           </div>
         </div>

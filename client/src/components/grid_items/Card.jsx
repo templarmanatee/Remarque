@@ -61,7 +61,6 @@ const Card = ({ cardItems, userCollections, spreadCollections }) => {
 
   return (
     <div className="card card-compact card-bordered w-full h-full md:w-1/3 md:h-1/3 m-8 bg-base-100 shadow-xl rounded-3xl">
-      <Dragger />
       <textarea
         type="text"
         placeholder="Title"
