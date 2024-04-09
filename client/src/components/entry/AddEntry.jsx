@@ -11,6 +11,7 @@ import {
 } from "../../utils/mutations";
 import { MultiSelect } from "react-multi-select-component";
 import makeAnimated from "react-select/animated";
+import UpdateContext from "../UpdateContext";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/timezone";
 import timezone from "dayjs/plugin/timezone";
@@ -68,6 +69,8 @@ const AddEntry = ({
     setCollections([...userOptions, ...spreadOptions]);
   }, [userCollections, spreadCollections]);
 
+  // const { triggerRerender } = useContext(UpdateContext);
+
   function getDayOfWeek(num) {
     const daysOfWeek = [
       "Monday",
@@ -108,14 +111,13 @@ const AddEntry = ({
 
   const handleCheckboxChange = (e, collection) => {
     if (e.target.checked) {
-      setSelected([...selected, collection]);
+      setSelected([...selected, collection.value]);
     } else {
       setSelected(
-        selected.filter(
-          (selectedCollection) => selectedCollection.value !== collection.value
-        )
+        selected.filter((selectedValue) => selectedValue !== collection.value)
       );
     }
+    console.log(selected);
   };
 
   const handleDeleteEntry = async (event) => {
@@ -135,6 +137,7 @@ const AddEntry = ({
           ),
         }));
       }
+      // triggerRerender();
       return mutationResponse;
     } catch (error) {
       console.error("Error deleting entry:", error);
@@ -167,6 +170,7 @@ const AddEntry = ({
             }
         );
       }
+      // triggerRerender();
       return mutationResponse;
     } catch (error) {
       console.error("Error deleting collection:", error);
@@ -178,11 +182,13 @@ const AddEntry = ({
     const collectionId = event.target.value;
     if (collectionId === "$new") {
       setEditCollection({ value: "$new", label: "", plannerItems: [] });
+      setNewCollectionName(""); // Reset the new collection name
     } else {
       const selectedCollection = collections.find(
         (collection) => collection.value === collectionId
       );
       setEditCollection(selectedCollection || userCollections[0]);
+      setNewCollectionName(selectedCollection ? selectedCollection.label : ""); // Update the new collection name
     }
   };
 
@@ -190,13 +196,14 @@ const AddEntry = ({
     event.preventDefault();
     const selectedCollection = editCollection;
     const title = newCollectionName;
+    console.log(selectedCollection);
+    console.log(title);
     const mutationResponse = await updateCollection({
       variables: {
-        id: selectedCollection._id,
+        id: selectedCollection.value,
         title: title,
       },
     });
-    console.log(mutationResponse);
   };
 
   const handleSubmitCollection = async (event) => {
@@ -316,7 +323,7 @@ const AddEntry = ({
                           className="form-checkbox h-5 w-5 text-gray-600"
                           name="collectionCheckbox"
                           value={collection.value}
-                          checked={selected.some((selectedCollection) => selectedCollection.value === collection.value)}
+                          checked={selected.includes(collection.value)}
                           onChange={(e) => handleCheckboxChange(e, collection)}
                         />
                         <span className="ml-2 text-gray-700">
@@ -410,7 +417,7 @@ const AddEntry = ({
                         style={{ width: "66%" }}
                         className="textarea grow h-12 textarea-bordered rounded-md"
                         placeholder="Collection Name: "
-                        value={editCollection.label}
+                        value={newCollectionName}
                         onChange={(e) => setNewCollectionName(e.target.value)}
                       />
                       <button

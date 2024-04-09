@@ -1,9 +1,5 @@
-// UpdateContext.js
-import React from 'react';
+import React from "react";
 
-const UpdateContext = React.createContext({
-  update: false,
-  setUpdate: () => {},
-});
+const UpdateContext = React.createContext();
 
 export default UpdateContext;

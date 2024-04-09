@@ -8,7 +8,7 @@ import { useMutation } from "@apollo/client";
 
 import { UPDATE_GRIDITEM } from "../../utils/mutations";
 
-const Card = ({ cardItems, userCollections, spreadCollections }) => {
+const Card = ({ cardItems, userCollections, spreadCollections, update }) => {
   const [updateGridItem] = useMutation(UPDATE_GRIDITEM);
 
   const [titleState, setTitleState] = useState(cardItems.title);
@@ -75,6 +75,7 @@ const Card = ({ cardItems, userCollections, spreadCollections }) => {
             key={item._id}
             userCollections={userCollections}
             spreadCollections={spreadCollections}
+            update={update}
           />
         ))}
       </div>

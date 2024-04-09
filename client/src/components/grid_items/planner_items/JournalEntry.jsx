@@ -5,7 +5,13 @@ import { MultiSelect } from "react-multi-select-component";
 import TimeDrop from "./TimeDrop";
 import dayjs from "dayjs";
 import makeAnimated from "react-select/animated";
-const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
+const JournalEntry = ({
+  entryDetails,
+  userCollections,
+  spreadCollections,
+  update,
+}) => {
+  console.log(entryDetails);
   // State variables for user input and button text
   const [updatePlannerItem, { error }] = useMutation(UPDATE_PLANNERITEM);
   const [inputText, setInputText] = useState("");
@@ -15,14 +21,7 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
   );
   const [additionalNotes, setAdditionalNotes] = useState(entryDetails.body);
   const [status, setStatus] = useState(entryDetails.status);
-  const [selected, setSelected] = useState(
-    entryDetails.collections.map((collectionId) => {
-      const collection =
-        userCollections.find((c) => c._id === collectionId) ||
-        spreadCollections.find((c) => c._id === collectionId);
-      return { value: collection._id, label: collection.title };
-    })
-  );
+  const [selected, setSelected] = useState(entryDetails.collections || []);
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -131,7 +130,7 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
 
   useEffect(() => {
     setInputText(entryDetails.title);
-  }, [entryDetails.title]);
+  }, []);
 
   useEffect(() => {
     if (entryDetails.collections) {
@@ -218,10 +217,7 @@ const JournalEntry = ({ entryDetails, userCollections, spreadCollections }) => {
                     className="form-checkbox h-5 w-5 text-gray-600"
                     name="collectionCheckbox"
                     value={collection.value}
-                    checked={selected.some(
-                      (selectedCollection) =>
-                        selectedCollection.value === collection.value
-                    )}
+                    checked={selected.includes(collection.value)}
                     onChange={(e) => handleCheckboxChange(e, collection)}
                   />
                   <span className="ml-2 text-gray-700">{collection.label}</span>

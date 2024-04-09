@@ -11,9 +11,14 @@ import { QUERY_SPREAD, QUERY_USER } from "../utils/queries";
 import { useParams } from "react-router-dom";
 import dayjs from "dayjs";
 const Journal = () => {
-  const [update, setUpdate] = useState(false);
   const [addPlannerItem, { itemError }] = useMutation(ADD_PLANNERITEM);
-  const handleFormSubmit = useCallback(async (event, input) => {
+
+  const [update, setUpdate] = useState(0); // State for forcing update
+
+  const forceRerender = () => {
+    setForceUpdate((prev) => prev + 1); // Update the state to force rerender
+  };
+  const handleFormSubmit = async (event, input) => {
     event.preventDefault();
     const timeFormat = "h:mma";
 
@@ -26,25 +31,25 @@ const Journal = () => {
       console.error("Invalid input time format.");
     }
 
-    const selectedCollections = input.selected.map((option) => option.value);
-
     try {
+      console.log(input);
       const mutationResponse = await addPlannerItem({
         variables: {
           title: input.inputText,
           body: input.additionalNotes,
           scheduled: scheduled,
           status: input.status,
-          collections: selectedCollections,
+          collections: input.selected,
         },
       });
       const plannerItemId = mutationResponse._id;
+      console.log("Ping");
+      forceRerender();
       return plannerItemId;
     } catch (e) {
       console.log(e);
     }
-    setUpdate((prev) => !prev);
-  }, []);
+  };
 
   const checkLoggedIn = () => {
     if (!Auth.loggedIn()) {
@@ -73,7 +78,7 @@ const Journal = () => {
     }
 
     return (
-      <UpdateContext.Provider value={{ update, setUpdate }}>
+      <UpdateContext.Provider value={{ update, setUpdate, forceRerender }}>
         <div className="grid grid-flow-row content-center">
           <Navbar
             allSpreads={userData.user.spreads}
@@ -87,6 +92,7 @@ const Journal = () => {
               spread={userData.user.spreads.slice(-1)[0]}
               userCollections={userData.user.collections}
               userId={userData._id}
+              update={update}
             />
           </div>
           <div className="fixed bottom-0 right-4 h-20 w-20">

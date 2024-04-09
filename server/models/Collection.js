@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-// const PlannerItem = require("./PlannerItem");
+const PlannerItem = require("./PlannerItem");
 // const GridItem = require("./GridItem");
 // const Layout = require("./Layout");
 

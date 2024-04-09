@@ -11,6 +11,7 @@ const Weekday = ({
   items,
   userCollections,
   spreadCollections,
+  update,
 }) => {
   const [plannerItems, setPlannerItems] = useState(items);
   const [updatePlannerItem] = useMutation(UPDATE_PLANNERITEM);
@@ -18,6 +19,10 @@ const Weekday = ({
   useEffect(() => {
     setPlannerItems(items);
   }, [items]);
+
+  useEffect(() => {
+    console.log("Spread rerender");
+  }, [update]);
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -47,6 +52,7 @@ const Weekday = ({
             entryDetails={item}
             userCollections={userCollections}
             spreadCollections={spreadCollections}
+            update={update}
           />
         ))}
       </div>

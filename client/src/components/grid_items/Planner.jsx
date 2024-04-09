@@ -5,7 +5,7 @@ import UpdateContext from "../UpdateContext";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../../utils/mutations";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -17,12 +17,12 @@ const Planner = ({
   allSpreads,
   currentSpread,
   userCollections,
+  update,
 }) => {
-  const { update } = useContext(UpdateContext);
+  console.log(currentSpread);
 
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
-  console.log(weeklyCollections);
 
   const getPreviousMonday = (dateString) => {
     const day = dayjs.unix(dateString / 1000 + 18000);
@@ -36,13 +36,26 @@ const Planner = ({
 
   const mondaysDate = getNextMonday(currentSpread.monday);
   const lastMondaysDate = getPreviousMonday(currentSpread.monday);
+  console.log(`Last Monday's Date: ${lastMondaysDate}`);
   console.log(Date(currentSpread.monday).toString());
 
   const handleLeftButton = async (e) => {
     e.preventDefault();
     let foundMonday;
     allSpreads.forEach(async (spread) => {
-      if (spread.monday === lastMondaysDate) {
+      const timestamp = parseInt(spread.monday, 10);
+      const timeObj = new Date(timestamp);
+
+      const formattedSelectedMonday = dayjs
+        .utc(timeObj)
+        .startOf("day")
+        .format("YYYY-MM-DD");
+      console.log(formattedSelectedMonday);
+      const formattedLastMonday = dayjs
+        .utc(lastMondaysDate)
+        .startOf("day")
+        .format("YYYY-MM-DD");
+      if (formattedSelectedMonday === formattedLastMonday) {
         foundMonday = spread;
       }
     });
@@ -65,6 +78,21 @@ const Planner = ({
     e.preventDefault();
     let foundMonday;
     allSpreads.forEach(async (spread) => {
+      const timestamp = parseInt(spread.monday, 10);
+      const timeObj = new Date(timestamp);
+
+      const formattedSelectedMonday = dayjs
+        .utc(timeObj)
+        .startOf("day")
+        .format("YYYY-MM-DD");
+      console.log(formattedSelectedMonday);
+      const formattedNextMonday = dayjs
+        .utc(mondaysDate)
+        .startOf("day")
+        .format("YYYY-MM-DD");
+      if (formattedSelectedMonday === formattedNextMonday) {
+        foundMonday = spread;
+      }
       if (spread.monday === mondaysDate) {
         foundMonday = spread;
       }
@@ -129,8 +157,8 @@ const Planner = ({
           </svg>
         </button>
       </ul>
-      <div key={update} className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
-        {weeklyCollections.map((collection) => (
+      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
+        {currentSpread.weeklyCollections.map((collection) => (
           <Weekday
             id={collection._id}
             key={collection._id}
@@ -138,6 +166,7 @@ const Planner = ({
             weekday={collection.title}
             spreadCollections={weeklyCollections}
             userCollections={userCollections}
+            update={update}
           />
         ))}
       </div>

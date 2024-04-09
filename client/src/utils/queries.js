@@ -23,25 +23,6 @@ export const QUERY_USER = gql`
             collections
           }
         }
-        gridItems {
-          _id
-          title
-          body
-          i
-        }
-        layout {
-          _id
-          i
-          x
-          y
-          w
-          h
-          minW
-          maxW
-          minH
-          maxH
-          card
-        }
         userId
       }
       collections {
@@ -65,12 +46,6 @@ export const QUERY_SPREAD = gql`
   query SpreadById($id: ID) {
     spreadById(_id: $id) {
       _id
-      gridItems {
-        _id
-        title
-        body
-        i
-      }
       monday
       weeklyCollections {
         _id
@@ -84,19 +59,6 @@ export const QUERY_SPREAD = gql`
           status
           collections
         }
-      }
-      layout {
-        _id
-        i
-        x
-        y
-        w
-        h
-        minW
-        maxW
-        minH
-        maxH
-        card
       }
       userId
     }

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import dayOfYear from "dayjs/plugin/dayOfYear";
-import utc from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../../utils/mutations";
@@ -37,18 +37,20 @@ const NavCalendar = ({ allSpreads, currentSpread }) => {
     setWeek(week);
     console.log("First day of week: " + week.firstDay);
 
-    // Format the selected week's first day for comparison
-    const formattedSelectedMonday = dayjs
-      .unix(week.firstDay / 1000)
+    const formattedSelectedMonday = dayjs(week.firstDay)
       .startOf("day")
-      .toISOString();
+      .format("YYYY-MM-DD");
 
     // Find the spread for the selected week
     const selectedSpread = allSpreads.find((spread) => {
+      console.log(spread.monday);
+      const timestamp = parseInt(spread.monday, 10);
+      const timeObj = new Date(timestamp);
       const formattedSpreadMonday = dayjs
-        .unix(spread.monday / 1000)
+        .utc(timeObj)
         .startOf("day")
-        .toISOString();
+        .format("YYYY-MM-DD");
+      console.log(formattedSpreadMonday);
       return formattedSpreadMonday === formattedSelectedMonday;
     });
 

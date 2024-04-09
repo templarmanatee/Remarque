@@ -30,19 +30,18 @@ const resolvers = {
         .populate([
           {
             path: "spreads",
-            populate: "gridItems ",
-          },
-          {
-            path: "spreads",
-            populate: "weeklyCollections ",
-          },
-          {
-            path: "spreads",
-            populate: "layout",
+            populate: [
+              { path: "gridItems" },
+              {
+                path: "weeklyCollections",
+                populate: { path: "plannerItems" },
+              },
+              { path: "layout" },
+            ],
           },
           {
             path: "collections",
-            populate: "plannerItems",
+            populate: { path: "plannerItems" },
           },
         ])
         .sort({ monday: -1 });
@@ -64,31 +63,41 @@ const resolvers = {
           .where("monday")
           .equals(monday)
           .where("userId")
-          .equals(context.user._id);
+          .equals(context.user._id)
+          .populate({
+            path: "weeklyCollections",
+            populate: {
+              path: "plannerItems",
+              model: "PlannerItem",
+            },
+          });
         return spread;
       }
     },
     spreadById: async (parent, { _id }, context) => {
       if (context.user) {
-        return await Spread.findById(_id).populate([
-          {
-            path: "gridItems",
-            populate: "_id",
-          },
-          {
+        return await Spread.findById(_id).populate({
+          path: "weeklyCollections",
+          populate: {
             path: "plannerItems",
-            populate: "_id",
+            model: "PlannerItem",
           },
-          {
-            path: "layout",
-            populate: "_id",
-          },
-        ]);
+        });
       }
+      throw new Error("Not authenticated");
     },
     userSpreads: async (parent, args, context) => {
       if (context.user) {
-        return await Spread.find().where("userId").equals(context.user._id);
+        return await Spread.find()
+          .where("userId")
+          .equals(context.user._id)
+          .populate({
+            path: "weeklyCollections",
+            populate: {
+              path: "plannerItems",
+              model: "PlannerItem",
+            },
+          });
       }
     },
   },
