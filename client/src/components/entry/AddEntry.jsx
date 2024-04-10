@@ -25,9 +25,10 @@ const AddEntry = ({
   filledEntry,
   hidePlusLabel,
   handleFormSubmit,
+  refetchData,
 }) => {
   const [addPlannerItem, { plannerItemError }] = useMutation(ADD_PLANNERITEM);
-  const [deletePlannerItem, { deleteItemError }] =
+  const [deletePlannerItem, { data, loading, error }] =
     useMutation(DELETE_PLANNERITEM);
   const [addCollection, { collectionError }] = useMutation(ADD_COLLECTION);
   const [updateCollection, { updateError }] = useMutation(UPDATE_COLLECTION);
@@ -124,11 +125,11 @@ const AddEntry = ({
     event.preventDefault();
     const entryId = event.target.value;
     try {
-      console.log(entryId);
+      console.log(editCollection);
       const mutationResponse = await deletePlannerItem({
-        variables: { _id: entryId },
+        variables: { _id: entryId, collectionId: editCollection._id },
       });
-      if (mutationResponse.data.deletePlannerItem) {
+      if (mutationResponse.data && mutationResponse.data.deletePlannerItem) {
         setDeletionSuccess(true);
         setEditCollection((prevCollection) => ({
           ...prevCollection,
@@ -137,10 +138,10 @@ const AddEntry = ({
           ),
         }));
       }
-      // triggerRerender();
+      refetchData();
       return mutationResponse;
     } catch (error) {
-      console.error("Error deleting entry:", error);
+      console.error(error);
       return null;
     }
   };
@@ -151,6 +152,8 @@ const AddEntry = ({
       console.log(collectionId);
       const mutationResponse = await deleteCollection({
         variables: { _id: collectionId },
+      }).then(() => {
+        refetchData();
       });
       if (mutationResponse.data.deletePlannerItem) {
         setCollectionSuccess(true);
@@ -203,6 +206,8 @@ const AddEntry = ({
         id: selectedCollection.value,
         title: title,
       },
+    }).then(() => {
+      refetchData();
     });
   };
 
@@ -214,6 +219,8 @@ const AddEntry = ({
         variables: {
           title: title,
         },
+      }).then(() => {
+        refetchData();
       });
       if (collectionDetails) {
         setCollectionSuccess(true);

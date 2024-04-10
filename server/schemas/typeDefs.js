@@ -102,8 +102,8 @@ const typeDefs = gql`
       status: String
       collections: [ID]
     ): PlannerItem
-    deletePlannerItem(_id: ID!): PlannerItem
-    deleteCollection(_id: ID!): Collection
+    deletePlannerItem(_id: ID!, collectionId: ID): Collection
+    deleteCollection(_id: ID!, collectionId: ID): Collection
     addUser(username: String!, email: String!, password: String!): Auth
     updateUser(username: String, email: String, password: String): User
     login(email: String!, password: String!): Auth

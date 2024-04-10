@@ -9,9 +9,8 @@ const JournalEntry = ({
   entryDetails,
   userCollections,
   spreadCollections,
-  update,
+  refetchData,
 }) => {
-  console.log(entryDetails);
   // State variables for user input and button text
   const [updatePlannerItem, { error }] = useMutation(UPDATE_PLANNERITEM);
   const [inputText, setInputText] = useState("");
@@ -21,7 +20,17 @@ const JournalEntry = ({
   );
   const [additionalNotes, setAdditionalNotes] = useState(entryDetails.body);
   const [status, setStatus] = useState(entryDetails.status);
-  const [selected, setSelected] = useState(entryDetails.collections || []);
+  const [selected, setSelected] = useState(
+    entryDetails.collections.map((id) => ({
+      value: id,
+      label:
+        (
+          userCollections.find((c) => c._id === id) ||
+          spreadCollections.find((c) => c._id === id) ||
+          {}
+        ).title || "Unknown",
+    }))
+  );
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -75,6 +84,7 @@ const JournalEntry = ({
   const handleCheckboxChange = (e, collection) => {
     if (e.target.checked) {
       setSelected((prevSelected) => [...prevSelected, collection]);
+      console.log(selected);
     } else {
       setSelected((prevSelected) =>
         prevSelected.filter(
@@ -86,7 +96,7 @@ const JournalEntry = ({
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const timeFormat = "h:mma"; // Example input, make sure this matches the format
+    const timeFormat = "h:mma";
 
     const scheduledFormatted = dayjs(inputTime, timeFormat);
     let scheduled;
@@ -97,26 +107,25 @@ const JournalEntry = ({
       console.error("Invalid input time format.");
     }
 
-    const selectedCollections = selected.map((option) => option.value);
-
     try {
       console.log(entryDetails._id);
       console.log(inputText);
       console.log(additionalNotes);
       console.log(scheduled);
       console.log(status);
-      console.log(selectedCollections);
+      console.log(selected);
+      const selectedValues = await selected.map((item) => item.value);
+      console.log(selectedValues);
       const mutationResponse = await updatePlannerItem({
         variables: {
-          id: entryDetails._id,
+          _id: entryDetails._id,
           title: inputText,
           body: additionalNotes,
           scheduled: scheduled,
           status: status,
-          collections: selectedCollections,
+          collections: selectedValues,
         },
-      });
-      const plannerItemId = mutationResponse._id;
+      }).then(refetchData());
     } catch (e) {
       console.log(e);
     }
@@ -134,9 +143,18 @@ const JournalEntry = ({
 
   useEffect(() => {
     if (entryDetails.collections) {
-      setSelected(entryDetails.collections);
+      const selectedCollections = collections.filter((collection) =>
+        entryDetails.collections.includes(collection.value)
+      );
+      console.log(selectedCollections);
+      setSelected(
+        selectedCollections.map((collection) => ({
+          value: collection.value,
+          label: collection.label,
+        }))
+      );
     }
-  }, [entryDetails.collections]);
+  }, [entryDetails.collections, collections]);
 
   useEffect(() => {
     handleTimeChange(entryDetails.scheduled);
@@ -210,19 +228,26 @@ const JournalEntry = ({
           />
           <div className="space-y-4">
             <div className="flex flex-col">
-              {collections.map((collection, index) => (
-                <label key={index} className="inline-flex items-center mt-3">
-                  <input
-                    type="checkbox"
-                    className="form-checkbox h-5 w-5 text-gray-600"
-                    name="collectionCheckbox"
-                    value={collection.value}
-                    checked={selected.includes(collection.value)}
-                    onChange={(e) => handleCheckboxChange(e, collection)}
-                  />
-                  <span className="ml-2 text-gray-700">{collection.label}</span>
-                </label>
-              ))}
+              {collections.map((collection, index) => {
+                return (
+                  <label key={index} className="inline-flex items-center mt-3">
+                    <input
+                      type="checkbox"
+                      className="form-checkbox h-5 w-5 text-gray-600"
+                      name="collectionCheckbox"
+                      value={collection.value}
+                      checked={selected.some(
+                        (selectedCollection) =>
+                          selectedCollection.value === collection.value
+                      )}
+                      onChange={(e) => handleCheckboxChange(e, collection)}
+                    />
+                    <span className="ml-2 text-gray-700">
+                      {collection.label}
+                    </span>
+                  </label>
+                );
+              })}
             </div>
             <select
               style={{ width: "25%" }}

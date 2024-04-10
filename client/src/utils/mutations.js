@@ -80,7 +80,7 @@ export const UPDATE_COLLECTION = gql`
 
 export const UPDATE_PLANNERITEM = gql`
   mutation updatePlannerItem(
-    $id: ID!
+    $_id: ID!
     $title: String
     $body: String
     $scheduled: String
@@ -88,7 +88,7 @@ export const UPDATE_PLANNERITEM = gql`
     $collections: [ID]
   ) {
     updatePlannerItem(
-      _id: $id
+      _id: $_id
       title: $title
       body: $body
       scheduled: $scheduled
@@ -97,25 +97,21 @@ export const UPDATE_PLANNERITEM = gql`
     ) {
       _id
       title
-      body
-      scheduled
-      collections
     }
   }
 `;
 
 export const DELETE_PLANNERITEM = gql`
-  mutation DeletePlannerItem($_id: ID!) {
-    deletePlannerItem(_id: $_id) {
+  mutation DeletePlannerItem($_id: ID!, $collectionId: ID) {
+    deletePlannerItem(_id: $_id, collectionId: $collectionId) {
       _id
-      title
     }
   }
 `;
 
 export const DELETE_COLLECTION = gql`
-  mutation DeleteCollection($_id: ID!) {
-    deleteCollection(_id: $_id) {
+  mutation DeleteCollection($_id: ID!, $collectionId: ID) {
+    deleteCollection(_id: $_id, collectionId: $collectionId) {
       _id
       title
     }

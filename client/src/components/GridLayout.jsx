@@ -11,9 +11,8 @@ const DndKitLayout = ({
   allSpreads,
   currentSpread,
   userCollections,
-  update,
+  refetchData,
 }) => {
-  console.log(userCollections);
   return (
     <div className="flex flex-col lg:flex-row">
       <div className="p-2 lg:w-1/2">
@@ -23,7 +22,7 @@ const DndKitLayout = ({
           currentSpread={currentSpread}
           userCollections={userCollections}
           userId={userId}
-          update={update}
+          refetchData={refetchData}
         />
       </div>
       <div className="lg:w-2/3">
@@ -35,7 +34,7 @@ const DndKitLayout = ({
                 key={collection._id}
                 userCollections={userCollections}
                 spreadCollections={spread.weeklyCollections}
-                update={update}
+                refetchData={refetchData}
               ></Card>
             );
           })}

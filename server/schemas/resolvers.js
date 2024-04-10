@@ -268,6 +268,65 @@ const resolvers = {
 
       throw new AuthenticationError("Not logged in");
     },
+    updatePlannerItem: async (
+      parent,
+      { _id, title, body, scheduled, status, collections },
+      context
+    ) => {
+      if (context.user) {
+        console.log("ID: " + _id);
+        const plannerItemId = _id;
+        const plannerItem = await PlannerItem.findById(plannerItemId);
+        console.log(plannerItem);
+
+        if (!plannerItem) {
+          throw new Error("plannerItem not found at that ID");
+        }
+
+        const removedCollections = plannerItem.collections.filter((id) => {
+          return !collections.includes(id.toString());
+        });
+        console.log(removedCollections);
+
+        const newCollections = collections.filter((id) => {
+          return !plannerItem.collections.includes(id.toString());
+        });
+
+        await Promise.all(
+          removedCollections.map(async (removedId) => {
+            await Collection.findByIdAndUpdate(removedId, {
+              $pull: { plannerItems: plannerItem._id },
+            });
+          })
+        );
+
+        await Promise.all(
+          newCollections.map(async (newId) => {
+            await Collection.findByIdAndUpdate(newId, {
+              $addToSet: { plannerItems: plannerItem._id },
+            });
+          })
+        );
+
+        return await PlannerItem.findByIdAndUpdate(
+          plannerItem._id,
+          {
+            $set: {
+              title: title,
+              body: body,
+              scheduled: scheduled,
+              status: status,
+              collections: collections,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+      }
+
+      throw new AuthenticationError("Not logged in");
+    },
     updateCollection: async (parent, { _id, title }, context) => {
       if (context.user) {
         return await Collection.findByIdAndUpdate(
@@ -303,13 +362,16 @@ const resolvers = {
 
       throw new AuthenticationError("Not logged in");
     },
-    deletePlannerItem: async (parent, { _id }, context) => {
+    deletePlannerItem: async (parent, { _id, collectionId }, context) => {
       if (context.user) {
-        const deletedItem = await PlannerItem.findByIdAndDelete(_id);
-        if (!deletedItem) {
-          throw new Error("Planner item not found.");
-        }
-        return deletedItem;
+        const updatedCollection = await Collection.findByIdAndUpdate(
+          collectionId,
+          {
+            $pull: { plannerItems: _id },
+          }
+        );
+
+        return updatedCollection;
       }
       throw new AuthenticationError("Not logged in");
     },

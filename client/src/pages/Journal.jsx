@@ -16,7 +16,11 @@ const Journal = () => {
   const [update, setUpdate] = useState(0); // State for forcing update
 
   const forceRerender = () => {
-    setForceUpdate((prev) => prev + 1); // Update the state to force rerender
+    setUpdate((prev) => prev + 1); // Update the state to force rerender
+  };
+
+  const refetchData = () => {
+    refetch();
   };
   const handleFormSubmit = async (event, input) => {
     event.preventDefault();
@@ -33,6 +37,7 @@ const Journal = () => {
 
     try {
       console.log(input);
+      let plannerItemId;
       const mutationResponse = await addPlannerItem({
         variables: {
           title: input.inputText,
@@ -41,11 +46,13 @@ const Journal = () => {
           status: input.status,
           collections: input.selected,
         },
+      }).then((response) => {
+        plannerItemId = response;
+        console.log(userData);
+        refetchData();
+        forceRerender();
+        return plannerItemId;
       });
-      const plannerItemId = mutationResponse._id;
-      console.log("Ping");
-      forceRerender();
-      return plannerItemId;
     } catch (e) {
       console.log(e);
     }
@@ -59,7 +66,7 @@ const Journal = () => {
   checkLoggedIn();
   let id = window.location.href.split("/")[3];
 
-  const { loading, error, data } = useQuery(QUERY_USER);
+  let { loading, error, data, refetch } = useQuery(QUERY_USER);
   const userData = data;
 
   if (loading) return "Loading...";
@@ -92,7 +99,7 @@ const Journal = () => {
               spread={userData.user.spreads.slice(-1)[0]}
               userCollections={userData.user.collections}
               userId={userData._id}
-              update={update}
+              refetchData={refetchData}
             />
           </div>
           <div className="fixed bottom-0 right-4 h-20 w-20">
@@ -101,6 +108,7 @@ const Journal = () => {
               spreadCollections={currentSpread.weeklyCollections}
               hidePlusLabel={false}
               handleFormSubmit={handleFormSubmit}
+              refetchData={refetchData}
             ></AddEntry>
           </div>
         </div>

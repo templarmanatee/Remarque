@@ -17,10 +17,8 @@ const Planner = ({
   allSpreads,
   currentSpread,
   userCollections,
-  update,
+  refetchData,
 }) => {
-  console.log(currentSpread);
-
   const [addSpread, { data, loading, error }] = useMutation(ADD_SPREAD);
   const [newSpread, setNewSpread] = useState("");
 
@@ -36,8 +34,6 @@ const Planner = ({
 
   const mondaysDate = getNextMonday(currentSpread.monday);
   const lastMondaysDate = getPreviousMonday(currentSpread.monday);
-  console.log(`Last Monday's Date: ${lastMondaysDate}`);
-  console.log(Date(currentSpread.monday).toString());
 
   const handleLeftButton = async (e) => {
     e.preventDefault();
@@ -166,7 +162,7 @@ const Planner = ({
             weekday={collection.title}
             spreadCollections={weeklyCollections}
             userCollections={userCollections}
-            update={update}
+            refetchData={refetchData}
           />
         ))}
       </div>
