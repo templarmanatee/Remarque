@@ -12,6 +12,7 @@ const Weekday = ({
   userCollections,
   spreadCollections,
   refetchData,
+  collectionId,
 }) => {
   const [plannerItems, setPlannerItems] = useState(items);
   const [updatePlannerItem] = useMutation(UPDATE_PLANNERITEM);
@@ -49,6 +50,7 @@ const Weekday = ({
             userCollections={userCollections}
             spreadCollections={spreadCollections}
             refetchData={refetchData}
+            collectionId={collectionId}
           />
         ))}
       </div>

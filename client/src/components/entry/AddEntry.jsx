@@ -127,7 +127,7 @@ const AddEntry = ({
     try {
       console.log(editCollection);
       const mutationResponse = await deletePlannerItem({
-        variables: { _id: entryId, collectionId: editCollection._id },
+        variables: { _id: entryId, collectionId: editCollection.value },
       });
       if (mutationResponse.data && mutationResponse.data.deletePlannerItem) {
         setDeletionSuccess(true);
@@ -152,8 +152,6 @@ const AddEntry = ({
       console.log(collectionId);
       const mutationResponse = await deleteCollection({
         variables: { _id: collectionId },
-      }).then(() => {
-        refetchData();
       });
       if (mutationResponse.data.deletePlannerItem) {
         setCollectionSuccess(true);
@@ -206,9 +204,8 @@ const AddEntry = ({
         id: selectedCollection.value,
         title: title,
       },
-    }).then(() => {
-      refetchData();
     });
+    refetchData();
   };
 
   const handleSubmitCollection = async (event) => {

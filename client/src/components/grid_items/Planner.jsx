@@ -163,6 +163,7 @@ const Planner = ({
             spreadCollections={weeklyCollections}
             userCollections={userCollections}
             refetchData={refetchData}
+            collectionId={collection._id}
           />
         ))}
       </div>
