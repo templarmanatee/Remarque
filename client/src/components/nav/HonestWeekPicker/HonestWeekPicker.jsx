@@ -12,12 +12,10 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
   const [open, setOpen] = useState(false);
   const modalRef = useRef(); // Ref for the modal
 
-  // Function to close the modal
   const closeModal = () => {
     setOpen(false);
   };
 
-  // Click outside to close modal
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -33,6 +31,7 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [open]);
+  
   //Weird hack begins courtesy of Prof. Sarah Van Wart
   let start = Date.parse(monday);
   console.log(monday);
