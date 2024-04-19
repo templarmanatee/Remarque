@@ -390,7 +390,7 @@ const AddEntry = ({
                       isSubmitting ? "loading" : ""
                     }`}
                     onClick={handleFormSubmit}
-                    disabled={isSubmitting} // Disable the button while submitting
+                    disabled={isSubmitting}
                   >
                     {isSubmitting ? "Submitting..." : "Submit Entry"}
                   </label>
