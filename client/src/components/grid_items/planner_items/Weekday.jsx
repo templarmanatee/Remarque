@@ -51,7 +51,7 @@ const Weekday = ({
 
   return (
     <div className="w-full text-left m-2">
-      <div className="divider w-full">{`${dateCalc(weekday)}`}</div>
+      <div className="divider w-5/6">{`${dateCalc(weekday)}`}</div>
       <div id="weekday-content" className="">
         {plannerItems.map((item) => (
           <JournalEntry
