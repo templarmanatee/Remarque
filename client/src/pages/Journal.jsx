@@ -22,41 +22,6 @@ const Journal = () => {
   const refetchData = () => {
     refetch();
   };
-  const handleFormSubmit = async (event, input) => {
-    event.preventDefault();
-    const timeFormat = "h:mma";
-
-    const scheduledFormatted = dayjs(input.inputTime, timeFormat);
-    let scheduled;
-
-    if (scheduledFormatted.isValid()) {
-      scheduled = scheduledFormatted.year(1970).month(0).date(1);
-    } else {
-      console.error("Invalid input time format.");
-    }
-
-    try {
-      console.log(input);
-      let plannerItemId;
-      const mutationResponse = await addPlannerItem({
-        variables: {
-          title: input.inputText,
-          body: input.additionalNotes,
-          scheduled: scheduled,
-          status: input.status,
-          collections: input.selected,
-        },
-      }).then((response) => {
-        plannerItemId = response;
-        console.log(userData);
-        refetchData();
-        forceRerender();
-        return plannerItemId;
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const checkLoggedIn = () => {
     if (!Auth.loggedIn()) {
@@ -107,7 +72,6 @@ const Journal = () => {
               userCollections={userData.user.collections}
               spreadCollections={currentSpread.weeklyCollections}
               hidePlusLabel={false}
-              handleFormSubmit={handleFormSubmit}
               refetchData={refetchData}
             ></AddEntry>
           </div>

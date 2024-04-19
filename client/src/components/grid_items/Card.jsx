@@ -37,7 +37,7 @@ const Card = ({
   }, [cardItems]);
 
   return (
-    <div className="card card-compact card-bordered w-full h-full md:w-1/3 md:h-1/3 m-8 bg-base-100 shadow-xl rounded-3xl">
+    <div className="card card-compact card-bordered w-full h-full md:w-2/3 md:h-1/3 lg:w-1/4 m-8 bg-base-100 shadow-xl rounded-3xl">
       <textarea
         type="text"
         placeholder="Title"

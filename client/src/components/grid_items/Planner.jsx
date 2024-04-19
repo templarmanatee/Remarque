@@ -109,7 +109,7 @@ const Planner = ({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-8rem)] text-left border-r-2 center-content">
+    <div className="w-full h-[calc(100vh-8rem)] text-left center-content">
       <ul
         className="menu menu-horizontal w-full flex center-content"
         style={{ justifyContent: "center" }}

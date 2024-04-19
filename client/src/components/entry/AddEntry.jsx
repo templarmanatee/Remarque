@@ -24,7 +24,6 @@ const AddEntry = ({
   userCollections,
   filledEntry,
   hidePlusLabel,
-  handleFormSubmit,
   refetchData,
 }) => {
   const [addPlannerItem, { plannerItemError }] = useMutation(ADD_PLANNERITEM);
@@ -53,6 +52,7 @@ const AddEntry = ({
     ...userCollections,
     ...spreadCollections,
   ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const userOptions = userCollections.map((collection) => ({
@@ -229,6 +229,42 @@ const AddEntry = ({
     }
   };
 
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    const timeFormat = "h:mma";
+
+    const scheduledFormatted = dayjs(inputTime, timeFormat);
+    let scheduled;
+
+    if (scheduledFormatted.isValid()) {
+      scheduled = scheduledFormatted.year(1970).month(0).date(1);
+    } else {
+      setIsSubmitting(false);
+      console.error("Invalid input time format.");
+    }
+
+    try {
+      let plannerItemId;
+      const mutationResponse = await addPlannerItem({
+        variables: {
+          title: inputText,
+          body: additionalNotes,
+          scheduled: scheduled,
+          status: status,
+          collections: selected,
+        },
+      }).then((response) => {
+        plannerItemId = response;
+        refetchData();
+        return plannerItemId;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    setIsSubmitting(false);
+  };
+
   useEffect(() => {
     setPlannerItems(editCollection.plannerItems || []);
   }, [editCollection]);
@@ -350,18 +386,13 @@ const AddEntry = ({
                 <div className="modal-action">
                   <label
                     htmlFor="planner_entry"
-                    className="btn btn-sm btn-primary"
-                    onClick={(event) =>
-                      handleFormSubmit(event, {
-                        inputText,
-                        inputTime,
-                        additionalNotes,
-                        status,
-                        selected,
-                      })
-                    }
+                    className={`btn btn-sm btn-primary ${
+                      isSubmitting ? "loading" : ""
+                    }`}
+                    onClick={handleFormSubmit}
+                    disabled={isSubmitting} // Disable the button while submitting
                   >
-                    Submit Entry
+                    {isSubmitting ? "Submitting..." : "Submit Entry"}
                   </label>
                 </div>
               </div>
