@@ -3,11 +3,13 @@ import TextareaAutosize from "react-textarea-autosize";
 import { useMutation } from "@apollo/client";
 import { FaRegSave } from "react-icons/fa";
 import JournalEntry from "./JournalEntry";
+import dayjs from "dayjs";
 import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
 const Weekday = ({
   id,
   body,
   weekday,
+  mondaysDate,
   items,
   userCollections,
   spreadCollections,
@@ -16,10 +18,18 @@ const Weekday = ({
 }) => {
   const [plannerItems, setPlannerItems] = useState(items);
   const [updatePlannerItem] = useMutation(UPDATE_PLANNERITEM);
+  console.log(mondaysDate);
 
   useEffect(() => {
     setPlannerItems(items);
   }, [items]);
+
+  const dateCalc = (dayIndex) => {
+    const adjustedMonday = dayjs(mondaysDate).subtract(7, "day");
+    const dayLabel = adjustedMonday.add(dayIndex, "day").format("dddd, D");
+    console.log("Adjusted Date: ", dayLabel);
+    return dayLabel;
+  };
 
   function getDayOfWeek(num) {
     const daysOfWeek = [
@@ -41,7 +51,7 @@ const Weekday = ({
 
   return (
     <div className="w-full text-left m-2">
-      <div className="divider w-72">{`${getDayOfWeek(weekday)}`}</div>
+      <div className="divider w-72">{`${dateCalc(weekday)}`}</div>
       <div id="weekday-content">
         {plannerItems.map((item) => (
           <JournalEntry

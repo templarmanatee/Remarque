@@ -153,13 +153,14 @@ const Planner = ({
           </svg>
         </button>
       </ul>
-      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
+      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4 p-2">
         {currentSpread.weeklyCollections.map((collection) => (
           <Weekday
             id={collection._id}
             key={collection._id}
             items={collection.plannerItems}
             weekday={collection.title}
+            mondaysDate={mondaysDate}
             spreadCollections={weeklyCollections}
             userCollections={userCollections}
             refetchData={refetchData}
