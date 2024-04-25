@@ -29,23 +29,23 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/mhengerer/Remarque">
-    <img src="/client/public/RemarqueSmallLogo.svg" alt="Logo" width="80" height="80">
+  <a href="https://github.com/templarmanatee/Remarque">
+    <img src="/client/src/RemarqueSmallLogo.svg" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Remarque</h3>
 
   <p align="center">
-    Simply a bullet journal application 
+    Simply put - a bullet journal application 
     <br />
-    <a href="https://github.com/mhengerer/Remarque"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/templarmanatee/Remarque"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/mhengerer/Remarque">View Demo</a>
+    <a href="https://github.com/templarmanatee/Remarque">View Demo</a>
     ·
-    <a href="https://github.com/mhengerer/Remarque/issues">Report Bug</a>
+    <a href="https://github.com/templarmanatee/Remarque/issues">Report Bug</a>
     ·
-    <a href="https://github.com/mhengerer/Remarque/issues">Request Feature</a>
+    <a href="https://github.com/templarmanatee/Remarque/issues">Request Feature</a>
   </p>
 </div>
 
@@ -56,7 +56,9 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#built-with">Built With:</a></li>
+        <li><a href="#built-with">MERN Stack</a></li>
+        <li><a href="#built-with">Tailwind and DaisyUI</a></li>
       </ul>
     </li>
     <li>
@@ -120,11 +122,15 @@ _Below is an example of how you can instruct your audience on installing and set
 
 2. Clone the repo
    ```sh
-   git clone git@github.com:mhengerer/Remarque.git
+   git clone git@github.com:templarmanatee/Remarque.git
    ```
 3. Install NPM packages
    ```sh
-   npm install
+   npm run install
+   ```
+4. Download MongoDB
+   ```
+   https://www.mongodb.com/docs/manual/installation/
    ```
 4. Build page
    ```sh
@@ -137,9 +143,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 ## Usage
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
+Remarque is useful for: taking notes, scheduling events, and making lists. 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -196,16 +200,16 @@ Use this space to list resources you find helpful and would like to give credit 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/mhengerer/Remarque.svg?style=for-the-badge
-[contributors-url]: https://github.com/mhengerer/Remarque/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/mhengerer/Remarque.svg?style=for-the-badge
-[forks-url]: https://github.com/mhengerer/Remarque/network/members
-[stars-shield]: https://img.shields.io/github/stars/mhengerer/Remarque.svg?style=for-the-badge
-[stars-url]: https://github.com/mhengerer/Remarque/stargazers
+[contributors-shield]: https://img.shields.io/github/contributors/templarmanatee/Remarque.svg?style=for-the-badge
+[contributors-url]: https://github.com/templarmanatee/Remarque/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/templarmanatee/Remarque.svg?style=for-the-badge
+[forks-url]: https://github.com/templarmanatee/Remarque/network/members
+[stars-shield]: https://img.shields.io/github/stars/templarmanatee/Remarque.svg?style=for-the-badge
+[stars-url]: https://github.com/templarmanatee/Remarque/stargazers
 [issues-shield]: https://img.shields.io/github/issues/mhengerer/Remarque.svg?style=for-the-badge
 [issues-url]: https://github.com/mhengerer/Remarqueissues
-[cr-shield]: https://img.shields.io/github/issues-pr-closed-raw/mhengerer/Remarque.svg?style=for-the-badge
-[cr-url]: https://github.com/mhengerer/Remarque/pulls?q=is%3Apr+is%3Aclosed
+[cr-shield]: https://img.shields.io/github/issues-pr-closed-raw/templarmanatee/Remarque.svg?style=for-the-badge
+[cr-url]: https://github.com/templarmanatee/Remarque/pulls?q=is%3Apr+is%3Aclosed
 [license-shield]: https://img.shields.io/github/license/mhengerer/Remarque.svg?style=for-the-badge
 [license-url]: https://github.com/mhengerer/Remarque/blob/master/LICENSE.txt
 [product-screenshot]: client\public\remarqueherokulogin.png
