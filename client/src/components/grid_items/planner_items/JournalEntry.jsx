@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
-import { MultiSelect } from "react-multi-select-component";
 import TimeDrop from "./TimeDrop";
 import dayjs from "dayjs";
-import makeAnimated from "react-select/animated";
 const JournalEntry = ({
   entryDetails,
   userCollections,
   spreadCollections,
   refetchData,
-  collectionId
+  collectionId,
 }) => {
   // State variables for user input and button text
   const [updatePlannerItem, { error }] = useMutation(UPDATE_PLANNERITEM);
@@ -104,8 +102,6 @@ const JournalEntry = ({
 
     if (scheduledFormatted.isValid()) {
       scheduled = scheduledFormatted.year(1970).month(0).date(1);
-    } else {
-      console.error("Invalid input time format.");
     }
 
     try {
@@ -126,13 +122,12 @@ const JournalEntry = ({
           status: status,
           collections: selectedValues,
         },
-      }).then(refetchData());
+      });
+      refetchData();
     } catch (e) {
       console.log(e);
     }
   };
-
-  const animatedComponents = makeAnimated();
 
   const handleTimeChange = (newTimeValue) => {
     setInputTime(dayjs(newTimeValue).format("h:mma"));
@@ -179,7 +174,11 @@ const JournalEntry = ({
           {buttonText}
         </h1>
       </label>
-      <input type="checkbox" id={entryDetails._id + collectionId} className="modal-toggle" />
+      <input
+        type="checkbox"
+        id={entryDetails._id + collectionId}
+        className="modal-toggle"
+      />
       <div className="modal">
         <div className="modal-box bg-white grid-flow-row">
           <div className="flex justify-end">

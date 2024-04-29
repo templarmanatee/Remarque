@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TextareaAutosize from "react-textarea-autosize";
-import Dragger from "./Dragger";
 import JournalEntry from "./planner_items/JournalEntry";
-import { FaRegSave } from "react-icons/fa";
-
-import { useMutation } from "@apollo/client";
-
-import { UPDATE_GRIDITEM } from "../../utils/mutations";
 
 const Card = ({
   cardItems,

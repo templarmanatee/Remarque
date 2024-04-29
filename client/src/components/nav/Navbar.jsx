@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Auth from "../../utils/auth";
 import { useMutation } from "@apollo/client";
 import { ADD_SPREAD } from "../../utils/mutations";
-import NavCalendar from "./NavCalendar";
-import Logo from "../../RemarqueSmallLogo.svg";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/timezone";
 import timezone from "dayjs/plugin/timezone";

@@ -9,12 +9,8 @@ import {
   DELETE_PLANNERITEM,
   DELETE_COLLECTION,
 } from "../../utils/mutations";
-import { MultiSelect } from "react-multi-select-component";
-import makeAnimated from "react-select/animated";
-import UpdateContext from "../UpdateContext";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/timezone";
-import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);

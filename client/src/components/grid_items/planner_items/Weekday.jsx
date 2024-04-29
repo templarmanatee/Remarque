@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
-import TextareaAutosize from "react-textarea-autosize";
-import { useMutation } from "@apollo/client";
-import { FaRegSave } from "react-icons/fa";
 import JournalEntry from "./JournalEntry";
 import dayjs from "dayjs";
-import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
 const Weekday = ({
   id,
   body,
@@ -17,7 +13,6 @@ const Weekday = ({
   collectionId,
 }) => {
   const [plannerItems, setPlannerItems] = useState(items);
-  const [updatePlannerItem] = useMutation(UPDATE_PLANNERITEM);
   console.log(mondaysDate);
 
   useEffect(() => {

@@ -3,16 +3,11 @@ import React, { useCallback, useState } from "react";
 import { GridLayout } from "../components/index";
 import { AddEntry } from "../components/entry/index";
 import { Navbar } from "../components/nav/index";
-import InfoModal from "../components/info";
 import Auth from "../utils/auth";
 import UpdateContext from "../components/UpdateContext";
-import { ADD_SPREAD, ADD_PLANNERITEM } from "../utils/mutations";
-import { QUERY_SPREAD, QUERY_USER } from "../utils/queries";
-import { useParams } from "react-router-dom";
-import dayjs from "dayjs";
+import { ADD_PLANNERITEM } from "../utils/mutations";
+import { QUERY_USER } from "../utils/queries";
 const Journal = () => {
-  const [addPlannerItem, { itemError }] = useMutation(ADD_PLANNERITEM);
-
   const [update, setUpdate] = useState(0); // State for forcing update
 
   const forceRerender = () => {

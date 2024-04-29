@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Dragger from "./Dragger";
 
 const Todo = () => {
   const [todos, setTodos] = useState([]);
