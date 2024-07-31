@@ -109,7 +109,7 @@ const Planner = ({
   };
 
   return (
-    <div className="w-full h-[calc(100vh-8rem)] text-left border-r-2 center-content">
+    <div className="w-full h-[calc(100vh-8rem)] text-left center-content">
       <ul
         className="menu menu-horizontal w-full flex center-content"
         style={{ justifyContent: "center" }}
@@ -153,16 +153,18 @@ const Planner = ({
           </svg>
         </button>
       </ul>
-      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4">
+      <div className="h-full grid grid-cols-1 md:grid-cols-2 space-x-4 p-2">
         {currentSpread.weeklyCollections.map((collection) => (
           <Weekday
             id={collection._id}
             key={collection._id}
             items={collection.plannerItems}
             weekday={collection.title}
+            mondaysDate={mondaysDate}
             spreadCollections={weeklyCollections}
             userCollections={userCollections}
             refetchData={refetchData}
+            collectionId={collection._id}
           />
         ))}
       </div>

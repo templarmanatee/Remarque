@@ -20,9 +20,9 @@ const SplashScreen = () => {
             <ul className="steps steps-vertical">
               <li className="step step-primary text-xl font-bold handwriting-font">Create an account</li>
               <li className="step step-primary text-xl font-bold handwriting-font">Be sure to log in</li>
-              <li className="step step-primary text-xl font-bold handwriting-font">
+              {/* <li className="step step-primary text-xl font-bold handwriting-font">
                 Find the ⓘ to Learn How To Customize your Journal
-              </li>
+              </li> */}
               <li className="step step-primary handwriting-font text-xl">
                 Begin your Digital Bullet Journal Dreams{" "}
               </li>

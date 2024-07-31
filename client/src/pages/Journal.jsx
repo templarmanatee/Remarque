@@ -3,16 +3,11 @@ import React, { useCallback, useState } from "react";
 import { GridLayout } from "../components/index";
 import { AddEntry } from "../components/entry/index";
 import { Navbar } from "../components/nav/index";
-import InfoModal from "../components/info";
 import Auth from "../utils/auth";
 import UpdateContext from "../components/UpdateContext";
-import { ADD_SPREAD, ADD_PLANNERITEM } from "../utils/mutations";
-import { QUERY_SPREAD, QUERY_USER } from "../utils/queries";
-import { useParams } from "react-router-dom";
-import dayjs from "dayjs";
+import { ADD_PLANNERITEM } from "../utils/mutations";
+import { QUERY_USER } from "../utils/queries";
 const Journal = () => {
-  const [addPlannerItem, { itemError }] = useMutation(ADD_PLANNERITEM);
-
   const [update, setUpdate] = useState(0); // State for forcing update
 
   const forceRerender = () => {
@@ -21,41 +16,6 @@ const Journal = () => {
 
   const refetchData = () => {
     refetch();
-  };
-  const handleFormSubmit = async (event, input) => {
-    event.preventDefault();
-    const timeFormat = "h:mma";
-
-    const scheduledFormatted = dayjs(input.inputTime, timeFormat);
-    let scheduled;
-
-    if (scheduledFormatted.isValid()) {
-      scheduled = scheduledFormatted.year(1970).month(0).date(1);
-    } else {
-      console.error("Invalid input time format.");
-    }
-
-    try {
-      console.log(input);
-      let plannerItemId;
-      const mutationResponse = await addPlannerItem({
-        variables: {
-          title: input.inputText,
-          body: input.additionalNotes,
-          scheduled: scheduled,
-          status: input.status,
-          collections: input.selected,
-        },
-      }).then((response) => {
-        plannerItemId = response;
-        console.log(userData);
-        refetchData();
-        forceRerender();
-        return plannerItemId;
-      });
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const checkLoggedIn = () => {
@@ -107,7 +67,6 @@ const Journal = () => {
               userCollections={userData.user.collections}
               spreadCollections={currentSpread.weeklyCollections}
               hidePlusLabel={false}
-              handleFormSubmit={handleFormSubmit}
               refetchData={refetchData}
             ></AddEntry>
           </div>

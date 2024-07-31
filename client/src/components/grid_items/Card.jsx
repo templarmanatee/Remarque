@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import TextareaAutosize from "react-textarea-autosize";
-import Dragger from "./Dragger";
 import JournalEntry from "./planner_items/JournalEntry";
-import { FaRegSave } from "react-icons/fa";
-
-import { useMutation } from "@apollo/client";
-
-import { UPDATE_GRIDITEM } from "../../utils/mutations";
 
 const Card = ({
   cardItems,
@@ -37,7 +30,7 @@ const Card = ({
   }, [cardItems]);
 
   return (
-    <div className="card card-compact card-bordered w-full h-full md:w-1/3 md:h-1/3 m-8 bg-base-100 shadow-xl rounded-3xl">
+    <div className="card card-compact card-bordered w-full h-full md:w-2/3 md:h-1/3 lg:w-1/4 m-8 bg-base-100 shadow-xl rounded-3xl">
       <textarea
         type="text"
         placeholder="Title"

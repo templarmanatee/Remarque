@@ -10,13 +10,31 @@ import { getDaysInMonth } from "date-fns/esm";
 
 export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
   const [open, setOpen] = useState(false);
-  // const [date, setDate] = useState(new Date());
-  // const [week, setWeek] = useState({
-  //   firstDay: startOfWeek(new Date(), { weekStartsOn: 1 }),
-  //   lastDay: endOfWeek(new Date(), { weekStartsOn: 1 }),
-  // });
+  const modalRef = useRef(); // Ref for the modal
+
+  const closeModal = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+  
   //Weird hack begins courtesy of Prof. Sarah Van Wart
   let start = Date.parse(monday);
+  console.log(monday);
   start = new Date(start + 60 * 60 * 24 * 1000);
 
   const [date, setDate] = useState(new Date(monday));
@@ -210,7 +228,6 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
     <>
       <div
         className="week-picker-display btn no-animation btn-neutral btn-circle mt-1"
-        onBlur={() => setOpen(true)}
         onClick={() => setOpen(true)}
         tabIndex={0}
       >
@@ -222,7 +239,7 @@ export const HonestWeekPicker = ({ onChange, monday, sunday }) => {
         </p>
       </div>
       {open && (
-        <div className="week-picker-options">
+        <div ref={modalRef} className="week-picker-options">
           <div className="title-week">
             <div onClick={() => handleDate()} className="arrow-container">
               {ArrowLeft}

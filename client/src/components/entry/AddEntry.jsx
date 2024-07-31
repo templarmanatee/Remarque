@@ -9,12 +9,8 @@ import {
   DELETE_PLANNERITEM,
   DELETE_COLLECTION,
 } from "../../utils/mutations";
-import { MultiSelect } from "react-multi-select-component";
-import makeAnimated from "react-select/animated";
-import UpdateContext from "../UpdateContext";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/timezone";
-import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
@@ -24,7 +20,6 @@ const AddEntry = ({
   userCollections,
   filledEntry,
   hidePlusLabel,
-  handleFormSubmit,
   refetchData,
 }) => {
   const [addPlannerItem, { plannerItemError }] = useMutation(ADD_PLANNERITEM);
@@ -53,6 +48,7 @@ const AddEntry = ({
     ...userCollections,
     ...spreadCollections,
   ]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const userOptions = userCollections.map((collection) => ({
@@ -127,7 +123,7 @@ const AddEntry = ({
     try {
       console.log(editCollection);
       const mutationResponse = await deletePlannerItem({
-        variables: { _id: entryId, collectionId: editCollection._id },
+        variables: { _id: entryId, collectionId: editCollection.value },
       });
       if (mutationResponse.data && mutationResponse.data.deletePlannerItem) {
         setDeletionSuccess(true);
@@ -152,8 +148,6 @@ const AddEntry = ({
       console.log(collectionId);
       const mutationResponse = await deleteCollection({
         variables: { _id: collectionId },
-      }).then(() => {
-        refetchData();
       });
       if (mutationResponse.data.deletePlannerItem) {
         setCollectionSuccess(true);
@@ -206,9 +200,8 @@ const AddEntry = ({
         id: selectedCollection.value,
         title: title,
       },
-    }).then(() => {
-      refetchData();
     });
+    refetchData();
   };
 
   const handleSubmitCollection = async (event) => {
@@ -230,6 +223,42 @@ const AddEntry = ({
       console.error("Error adding collection:", error);
       return null;
     }
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+    const timeFormat = "h:mma";
+
+    const scheduledFormatted = dayjs(inputTime, timeFormat);
+    let scheduled;
+
+    if (scheduledFormatted.isValid()) {
+      scheduled = scheduledFormatted.year(1970).month(0).date(1);
+    } else {
+      setIsSubmitting(false);
+      console.error("Invalid input time format.");
+    }
+
+    try {
+      let plannerItemId;
+      const mutationResponse = await addPlannerItem({
+        variables: {
+          title: inputText,
+          body: additionalNotes,
+          scheduled: scheduled,
+          status: status,
+          collections: selected,
+        },
+      }).then((response) => {
+        plannerItemId = response;
+        refetchData();
+        return plannerItemId;
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    setIsSubmitting(false);
   };
 
   useEffect(() => {
@@ -353,18 +382,13 @@ const AddEntry = ({
                 <div className="modal-action">
                   <label
                     htmlFor="planner_entry"
-                    className="btn btn-sm btn-primary"
-                    onClick={(event) =>
-                      handleFormSubmit(event, {
-                        inputText,
-                        inputTime,
-                        additionalNotes,
-                        status,
-                        selected,
-                      })
-                    }
+                    className={`btn btn-sm btn-primary ${
+                      isSubmitting ? "loading" : ""
+                    }`}
+                    onClick={handleFormSubmit}
+                    disabled={isSubmitting}
                   >
-                    Submit Entry
+                    {isSubmitting ? "Submitting..." : "Submit Entry"}
                   </label>
                 </div>
               </div>

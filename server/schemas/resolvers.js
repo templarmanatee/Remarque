@@ -364,14 +364,25 @@ const resolvers = {
     },
     deletePlannerItem: async (parent, { _id, collectionId }, context) => {
       if (context.user) {
-        const updatedCollection = await Collection.findByIdAndUpdate(
-          collectionId,
-          {
+        try {
+          // Remove the planner item reference from the collection
+          await Collection.findByIdAndUpdate(collectionId, {
             $pull: { plannerItems: _id },
-          }
-        );
+          });
 
-        return updatedCollection;
+          // Remove the collection reference from the planner item
+          const updatedPlannerItem = await PlannerItem.findByIdAndUpdate(
+            _id,
+            {
+              $pull: { collections: collectionId },
+            },
+            { new: true }
+          ); // Use { new: true } to return the updated document
+
+          return updatedPlannerItem;
+        } catch (error) {
+          throw new Error("Could not remove connection");
+        }
       }
       throw new AuthenticationError("Not logged in");
     },

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import { UPDATE_PLANNERITEM } from "../../../utils/mutations";
-import { MultiSelect } from "react-multi-select-component";
 import TimeDrop from "./TimeDrop";
 import dayjs from "dayjs";
-import makeAnimated from "react-select/animated";
 const JournalEntry = ({
   entryDetails,
   userCollections,
   spreadCollections,
   refetchData,
+  collectionId,
 }) => {
   // State variables for user input and button text
   const [updatePlannerItem, { error }] = useMutation(UPDATE_PLANNERITEM);
@@ -103,8 +102,6 @@ const JournalEntry = ({
 
     if (scheduledFormatted.isValid()) {
       scheduled = scheduledFormatted.year(1970).month(0).date(1);
-    } else {
-      console.error("Invalid input time format.");
     }
 
     try {
@@ -125,13 +122,12 @@ const JournalEntry = ({
           status: status,
           collections: selectedValues,
         },
-      }).then(refetchData());
+      });
+      refetchData();
     } catch (e) {
       console.log(e);
     }
   };
-
-  const animatedComponents = makeAnimated();
 
   const handleTimeChange = (newTimeValue) => {
     setInputTime(dayjs(newTimeValue).format("h:mma"));
@@ -171,19 +167,23 @@ const JournalEntry = ({
   return (
     <>
       <label
-        htmlFor={entryDetails._id}
+        htmlFor={entryDetails._id + collectionId}
         className="btn bg-transparent border-2 btn-sm rounded-full m-1"
       >
         <h1 className={`text-s ${status === "X" ? "line-through" : ""}`}>
           {buttonText}
         </h1>
       </label>
-      <input type="checkbox" id={entryDetails._id} className="modal-toggle" />
+      <input
+        type="checkbox"
+        id={entryDetails._id + collectionId}
+        className="modal-toggle"
+      />
       <div className="modal">
         <div className="modal-box bg-white grid-flow-row">
           <div className="flex justify-end">
             <label
-              htmlFor={entryDetails._id}
+              htmlFor={entryDetails._id + collectionId}
               className="btn btn-sm btn-ghost btn-circle"
             >
               <svg
@@ -263,11 +263,11 @@ const JournalEntry = ({
 
           <div className="modal-action">
             <label
-              htmlFor={entryDetails._id}
+              htmlFor={entryDetails._id + collectionId}
               className="btn btn-sm btn-primary"
               onClick={handleFormSubmit}
             >
-              Edit Entry
+              Save Edits
             </label>
           </div>
         </div>
